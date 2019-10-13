@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTcpSocket>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onConnectClicked);
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::onWriteRequest);
+    connect(m_socket, &QTcpSocket::readyRead, this, &MainWindow::onResponseReady);
 }
 
 MainWindow::~MainWindow()
@@ -45,10 +49,40 @@ void MainWindow::onDisconnected()
 
 void MainWindow::onWriteRequest()
 {
+    ui->label->clear();
+
     if (!m_connectionState) {
         ui->label->setText("You have to be connected to write message.");
         return;
     }
 
-    m_socket->write();
+    QJsonObject object;
+    QJsonValue idRequest = ui->lineEdit_2->text().toInt();
+
+    QJsonValue value1 = 200;
+    QJsonValue value2 = 300;
+    QJsonValue value3 = 400;
+
+    object.insert("command", idRequest);
+    object.insert("value1", value1);
+    object.insert("value2", value2);
+    object.insert("value3", value3);
+
+    auto doc = QJsonDocument(object);
+
+    qDebug() << doc.toBinaryData();
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void MainWindow::onResponseReady()
+{
+    QJsonDocument doc = QJsonDocument::fromBinaryData(m_socket->readAll());
+    auto obj = doc.object();
+    QString displayText;
+    for(auto key : obj.keys()) {
+       displayText += key + ":" + obj.value(key).toString() + "\n";
+    }
+
+    ui->label->setText(displayText);
 }

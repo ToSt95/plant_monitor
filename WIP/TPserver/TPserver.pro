@@ -35,3 +35,5 @@ HEADERS += \
     dbmanager.h \
     request.h \
     server.h
+
+RESOURCES +=

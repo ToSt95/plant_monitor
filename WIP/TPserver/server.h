@@ -17,9 +17,12 @@ public:
     bool stop();
     void initConnection();
     void registerTypes();
+signals:
+    void responseReady(const QByteArray& response);
 
 public slots:
     void onClientDisconnected(qintptr descriptor);
+    void onNewRequest(const QByteArray& data);
 
 protected:
     void incomingConnection(qintptr handle);

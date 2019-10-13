@@ -12,6 +12,7 @@ class DbManager : public QObject
 public:
     explicit DbManager(QObject *parent = nullptr);
     void createConnection();
+    QStringList getAllMeasurements();
 
 signals:
 

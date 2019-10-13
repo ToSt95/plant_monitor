@@ -1,13 +1,22 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
+#include <QByteArray>
+#include <QJsonDocument>
 
-enum Req {WaterON = 1, WaterOFF, GetTemp};
 
 class Request
 {
 public:
-    Request();
+    Request(const QByteArray& data);
+    enum Command { AirHumidity = 1};
+    QJsonDocument json();
+    QByteArray binary();
+    Request::Command command();
+
+private:
+    QByteArray m_rawData;
+    QJsonDocument m_jsonData;
 };
 
 #endif // REQUEST_H
