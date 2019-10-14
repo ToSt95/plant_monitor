@@ -26,15 +26,83 @@ void DbManager::createConnection()
     }
 }
 
+void DbManager::closeConnection()
+{
+    auto db = QSqlDatabase::database(m_config.databaseName);
+    if(db.isOpen()) {
+        db.close();
+    }
+}
+
 QStringList DbManager::getAllMeasurements()
 {
     QSqlQuery query;
     QStringList result{};
-    query.prepare("SELECT air_humidity FROM measurements");
+    query.prepare("SELECT air_humidity, date FROM measurements");
     query.exec();
     while(query.next()) {
         result.append(query.value(0).toString());
     }
 
     return  result;
+}
+
+QVector<QStringList> DbManager::getAirHumidity()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT humidity, date FROM air_measurement");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        measurement.append(query.value(0).toString());
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QVector<QStringList> DbManager::getAirTemperature()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT temperature, date FROM air_measurement");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        measurement.append(query.value(0).toString());
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QVector<QStringList> DbManager::getLightIntensity()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT intensity, date FROM light_measurement");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        measurement.append(query.value(0).toString());
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QVector<QStringList> DbManager::getSoilMoisture()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT moisture, date FROM soil_measurement");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        measurement.append(query.value(0).toString());
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
 }

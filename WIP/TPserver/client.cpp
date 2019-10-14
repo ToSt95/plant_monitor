@@ -1,9 +1,11 @@
 #include "client.h"
 #include <QString>
+#include <QTcpSocket>
 
 Client::Client(QObject *parent)
     : QObject(parent)
 {
+
 }
 
 QTcpSocket* Client::socket()
@@ -15,7 +17,6 @@ void Client::startClient(qintptr socketDescriptor)
 {
     m_socket = new QTcpSocket(this);
     m_socket->setSocketDescriptor(socketDescriptor);
-    m_readStream.setDevice(m_socket);
     m_descriptor = socketDescriptor;
     moveToThread(&m_clientThread);
     m_clientThread.start();

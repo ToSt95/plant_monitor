@@ -58,18 +58,8 @@ void MainWindow::onWriteRequest()
 
     QJsonObject object;
     QJsonValue idRequest = ui->lineEdit_2->text().toInt();
-
-    QJsonValue value1 = 200;
-    QJsonValue value2 = 300;
-    QJsonValue value3 = 400;
-
     object.insert("command", idRequest);
-    object.insert("value1", value1);
-    object.insert("value2", value2);
-    object.insert("value3", value3);
-
     auto doc = QJsonDocument(object);
-
     qDebug() << doc.toBinaryData();
     m_socket->write(doc.toBinaryData());
     m_socket->flush();

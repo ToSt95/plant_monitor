@@ -9,7 +9,7 @@ class Request
 {
 public:
     Request(const QByteArray& data);
-    enum Command { AirHumidity = 1};
+    enum Command { AirHumidity = 1, AirTemperature, LightIntensity, SoilMoisture};
     QJsonDocument json();
     QByteArray binary();
     Request::Command command();

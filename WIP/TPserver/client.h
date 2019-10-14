@@ -2,9 +2,9 @@
 #define CLIENT_H
 
 #include <QObject>
-#include <QTcpSocket>
 #include <QThread>
-#include <QDataStream>
+
+class QTcpSocket;
 
 class Client : public QObject
 {
@@ -24,7 +24,6 @@ private:
     QThread m_clientThread;
     QTcpSocket* m_socket;
     qintptr m_descriptor{-1};
-    QDataStream m_readStream;
 };
 
 #endif // CLIENT_H

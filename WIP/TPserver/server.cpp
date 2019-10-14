@@ -20,7 +20,7 @@ bool Server::start()
     return true;
 }
 
-bool Server::stop()
+void Server::stop()
 {
     close();
 }
@@ -47,26 +47,57 @@ void Server::onNewRequest(const QByteArray& data)
 
     Request requestFromClient(data);
     Request::Command command = requestFromClient.command();
-
-
-
-    qDebug() << "COMMAND:" << command;
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) != 1) {
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 4) {
         responseJsonObject.insert("error", "invalid command");
     }
 
     switch (command) {
-    case Request::AirHumidity:
-        QStringList dbResult = m_dbManager.getAllMeasurements();
-        int valueCounter = 1;
-        foreach (const auto &str, dbResult)
-        {
-            responseJsonObject.insert("value"+ QString::number(valueCounter), str);
-            valueCounter++;
+    case Request::AirHumidity: {
+        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
+        int counter = 1;
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert(QString::number(counter) + ". Air humidity:", measurement.at(0));
+            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
+            counter++;
         }
+
         break;
+    }
+    case Request::AirTemperature: {
+        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
+        int counter = 1;
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert(QString::number(counter) + ". Air temperature:", measurement.at(0));
+            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
+            counter++;
+        }
+
+        break;
+    }
+    case Request::LightIntensity: {
+        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
+        int counter = 1;
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert(QString::number(counter) + ". Light intensity:", measurement.at(0));
+            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
+            counter++;
+        }
+
+        break;
+    }
+    case Request::SoilMoisture: {
+        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
+        int counter = 1;
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert(QString::number(counter) + ". Soil moisture:", measurement.at(0));
+            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
+            counter++;
+        }
+
+        break;
+    }
     }
 
     QJsonDocument doc(responseJsonObject);

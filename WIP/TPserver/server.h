@@ -14,7 +14,7 @@ class Server : public QTcpServer
 public:
     explicit Server();
     bool start();
-    bool stop();
+    void stop();
     void initConnection();
     void registerTypes();
 signals:

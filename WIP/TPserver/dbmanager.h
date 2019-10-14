@@ -12,11 +12,13 @@ class DbManager : public QObject
 public:
     explicit DbManager(QObject *parent = nullptr);
     void createConnection();
+    void closeConnection();
     QStringList getAllMeasurements();
 
-signals:
-
-public slots:
+    QVector<QStringList> getAirHumidity();
+    QVector<QStringList> getAirTemperature();
+    QVector<QStringList> getLightIntensity();
+    QVector<QStringList> getSoilMoisture();
 
 private:
     Config m_config;
