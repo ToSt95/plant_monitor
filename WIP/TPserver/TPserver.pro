@@ -22,7 +22,8 @@ SOURCES += \
         dbmanager.cpp \
         main.cpp \
         request.cpp \
-        server.cpp
+        server.cpp \
+    mailmanager.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,6 +35,7 @@ HEADERS += \
     config.h \
     dbmanager.h \
     request.h \
-    server.h
+    server.h \
+    mailmanager.h
 
 RESOURCES +=

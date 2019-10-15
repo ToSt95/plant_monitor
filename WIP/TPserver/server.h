@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QTcpServer>
 #include "dbmanager.h"
+#include "mailmanager.h"
 
 class Client;
 
@@ -12,7 +13,7 @@ class Server : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit Server();
+    Server();
     bool start();
     void stop();
     void initConnection();
@@ -30,6 +31,8 @@ protected:
 private:
     QMap<qintptr, Client*> m_clients;
     DbManager m_dbManager;
+    Email::EmailConfig m_mailConfig;
+    Email::Sender* mailSender;
 };
 
 #endif // SERVER_H

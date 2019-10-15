@@ -11,6 +11,9 @@ public:
     QByteArray user{"root"};
     QByteArray password{"milodev1024"};
     QByteArray port;
+
+    QString emailAddress;
+    QString emailPassword;
 };
 
 #endif // CONFIG_H

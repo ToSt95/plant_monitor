@@ -8,6 +8,7 @@
 
 Server::Server()
 {
+
 }
 
 bool Server::start()
@@ -17,6 +18,26 @@ bool Server::start()
         return false;
     }
     qInfo("Server started!");
+
+    m_mailConfig.host = "smtp.gmail.com";
+    m_mailConfig.port = 465;
+    m_mailConfig.timeout = 10000;
+
+    // setting up config values
+    m_mailConfig.user = "team.project.arduino@gmail.com";
+    m_mailConfig.password = "!@#123qweasdzxc";
+
+    // creating sender object
+    mailSender = new Email::Sender(&m_mailConfig,this);
+    connect(mailSender, &Email::Sender::finished, [this](int value){
+        qDebug() << "EMAIL RESPONSE CODE:" << mailSender->exitCodeDescription(value);
+    });
+    // creating message and sending
+    Email::Message message;
+    message.recipient = "team.project.arduino@gmail.com";
+    message.subject = "Server has been started";
+    message.body = "Server is now running";
+    mailSender->send(message);
     return true;
 }
 
