@@ -1,5 +1,4 @@
 #include "mailmanager.h"
-#include "emailconfig.h"
 #include <QSslSocket>
 #include <QTextStream>
 #include <QLoggingCategory>

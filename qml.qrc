@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
+        <file>qml/LoginView.qml</file>
+        <file>img/background.jpg</file>
+        <file>qml/Input.qml</file>
+        <file>qml/Button.qml</file>
+        <file>qml/MainView.qml</file>
     </qresource>
 </RCC>

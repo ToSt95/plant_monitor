@@ -29,6 +29,9 @@ protected:
     void incomingConnection(qintptr handle);
 
 private:
+    void setEmailConfig();
+    Email::Message createMessage();
+
     QMap<qintptr, Client*> m_clients;
     DbManager m_dbManager;
     Email::EmailConfig m_mailConfig;

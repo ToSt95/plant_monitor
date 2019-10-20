@@ -9,7 +9,7 @@ public:
     QByteArray databaseName{"tp_database"};
     QByteArray addres{"localhost"};
     QByteArray user{"root"};
-    QByteArray password{"milodev1024"};
+    QByteArray password{"root"};
     QByteArray port;
 
     QString emailAddress;
