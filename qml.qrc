@@ -4,7 +4,10 @@
         <file>qml/LoginView.qml</file>
         <file>img/background.jpg</file>
         <file>qml/Input.qml</file>
-        <file>qml/Button.qml</file>
-        <file>qml/MainView.qml</file>
+        <file>qml/MeasurementView.qml</file>
+        <file>qml/SettingsView.qml</file>
+        <file>qml/OrderView.qml</file>
+        <file>qml/AboutView.qml</file>
+        <file>qml/RaportsView.qml</file>
     </qresource>
 </RCC>
