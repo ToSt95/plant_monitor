@@ -32,6 +32,9 @@ ApplicationWindow {
             anchors.fill: parent
             model: ListModel {
                 ListElement {
+                    name: "Urządzenie"
+                }
+                ListElement {
                     name: "Odczyt"
                 }
                 ListElement {
@@ -65,7 +68,7 @@ ApplicationWindow {
         LoginView {
             onLoginRequest: {
                 if (email == "1" && password == "1") {
-                    loader.sourceComponent = measurementPage
+                    loader.sourceComponent = devicePage
                     menuView.currentIndex = 0
                     drawer.open()
                 }
@@ -91,6 +94,10 @@ ApplicationWindow {
     Component {
         id:aboutPage
         AboutView {}
+    }
+    Component {
+        id:devicePage
+        DeviceView {}
     }
 
     Component {
@@ -121,21 +128,24 @@ ApplicationWindow {
                 onClicked: {
                     switch(index) {
                     case 0:
-                        loader.sourceComponent = measurementPage
+                        loader.sourceComponent = devicePage
                         break;
                     case 1:
-                        loader.sourceComponent = orderPage
+                        loader.sourceComponent = measurementPage
                         break;
                     case 2:
-                        loader.sourceComponent = reportsPage
+                        loader.sourceComponent = orderPage
                         break;
                     case 3:
-                        loader.sourceComponent = settingsPage
+                        loader.sourceComponent = reportsPage
                         break;
                     case 4:
-                        loader.sourceComponent = aboutPage
+                        loader.sourceComponent = settingsPage
                         break;
                     case 5:
+                        loader.sourceComponent = aboutPage
+                        break;
+                    case 6:
                         loader.sourceComponent = loginView
                         drawer.close()
                         break;

@@ -1,23 +1,16 @@
 import QtQuick 2.0
+import QtQuick.Controls 2.5
 
 Item {
     property string text: textInput.text
+    property string placeholder
 
     width: 200
     height: 30
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        color: "white"
-        border.color: "black"
-        border.width: 1
-        radius: 5
-    }
-
-    TextInput {
+    TextField  {
         id: textInput
-        font.pixelSize: 20
+        font.pixelSize: 15
         anchors.left: parent.left
         anchors.leftMargin: 5
         anchors.right: parent.right
@@ -25,6 +18,16 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         clip: true
         verticalAlignment: TextInput.AlignVCenter
+        placeholderText: placeholder
+
+        background:     Rectangle {
+            id: background
+            anchors.fill: parent
+            color: "white"
+            border.color: "black"
+            border.width: 1
+            radius: 5
+        }
     }
 }
 

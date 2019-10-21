@@ -25,10 +25,12 @@ Item {
 
         Input {
             id: ipAddress
+            placeholder: "Adres IP..."
         }
 
         Input {
             id: deviceToken
+            placeholder: "Token urząrdzenia..."
         }
 
         Button {

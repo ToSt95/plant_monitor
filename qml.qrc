@@ -9,5 +9,6 @@
         <file>qml/OrderView.qml</file>
         <file>qml/AboutView.qml</file>
         <file>qml/RaportsView.qml</file>
+        <file>qml/DeviceView.qml</file>
     </qresource>
 </RCC>
