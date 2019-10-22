@@ -23,14 +23,35 @@ Item {
         anchors.centerIn: parent
         spacing: 15
 
+        RowLayout {
+            id: connectionLabel
+            width: 200
+            Layout.alignment: Qt.AlignCenter
+
+            Text {
+                id: connectionText
+                font.pixelSize: 15
+                text: qsTr("Server status:")
+            }
+
+            Rectangle {
+                id: connectionIcon
+                color: connector.isConnected ? "green" : "red"
+                width: 25
+                height: 25
+                radius: 15
+            }
+
+        }
+
         Input {
             id: ipAddress
-            placeholder: "Adres IP..."
+            placeholder: "Użytkownik..."
         }
 
         Input {
             id: deviceToken
-            placeholder: "Token urząrdzenia..."
+            placeholder: "hasło..."
         }
 
         Button {
@@ -51,8 +72,20 @@ Item {
             }
             onClicked: {
                 loginRequest(ipAddress.text, deviceToken.text)
+                console.log(connector.isConnected)
             }
         }
     }
+
+    Connections {
+        target: connector
+
+        onConnectionStatusChanged: {
+            console.log("DASDNJANSJDKNBAJKSBDKJASBDJBASDKJBAJSKBDKJASBKDJBASKDKJA")
+
+        }
+    }
 }
+
+
 
