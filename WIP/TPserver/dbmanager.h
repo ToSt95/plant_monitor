@@ -19,6 +19,7 @@ public:
     QVector<QStringList> getAirTemperature();
     QVector<QStringList> getLightIntensity();
     QVector<QStringList> getSoilMoisture();
+    QVector<QStringList> getUserData(const QString& email, const QString& password);
 
 private:
     Config m_config;

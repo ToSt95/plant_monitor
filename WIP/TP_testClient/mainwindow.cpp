@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onConnectClicked);
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::onWriteRequest);
     connect(m_socket, &QTcpSocket::readyRead, this, &MainWindow::onResponseReady);
+    connect(m_socket, &QTcpSocket::stateChanged, [](QAbstractSocket::SocketState socketState)  {
+        qDebug() << "STATE" << socketState;
+    });
 }
 
 MainWindow::~MainWindow()

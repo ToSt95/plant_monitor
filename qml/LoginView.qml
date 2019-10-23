@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.4
 
 Item {
 
-    signal loginRequest(string email, string password)
+    signal loginRequest(var response)
 
     Rectangle {
         id: background
@@ -30,32 +30,33 @@ Item {
 
             Text {
                 id: connectionText
-                font.pixelSize: 15
-                text: qsTr("Server status:")
+                font.pixelSize: 25
+                font.bold: true
+                text: qsTr("Status serwera:")
             }
 
             Rectangle {
                 id: connectionIcon
                 color: connector.isConnected ? "green" : "red"
-                width: 25
-                height: 25
-                radius: 15
+                width: 30
+                height: 30
+                radius: 30
             }
 
         }
 
         Input {
-            id: ipAddress
+            id: email
             placeholder: "Użytkownik..."
         }
 
         Input {
-            id: deviceToken
+            id: password
             placeholder: "hasło..."
         }
 
         Button {
-            text: "Połącz"
+            text: "Zaloguj"
             Layout.alignment: Qt.AlignHCenter
             style: ButtonStyle {
                 background: Rectangle {
@@ -71,8 +72,7 @@ Item {
                 }
             }
             onClicked: {
-                loginRequest(ipAddress.text, deviceToken.text)
-                console.log(connector.isConnected)
+                connector.loginRequest(email.text, password.text)
             }
         }
     }
@@ -80,9 +80,9 @@ Item {
     Connections {
         target: connector
 
-        onConnectionStatusChanged: {
-            console.log("DASDNJANSJDKNBAJKSBDKJASBDJBASDKJBAJSKBDKJASBKDJBASKDKJA")
-
+        onLoginResponse: {
+            console.log("QML login response", response)
+            loginRequest(response)
         }
     }
 }

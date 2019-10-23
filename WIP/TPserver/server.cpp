@@ -58,8 +58,10 @@ void Server::onNewRequest(const QByteArray& data)
     Request::Command command = requestFromClient.command();
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 4) {
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 5) {
         responseJsonObject.insert("error", "invalid command");
+    } else {
+        responseJsonObject.insert("command", command);
     }
 
     switch (command) {
@@ -107,6 +109,15 @@ void Server::onNewRequest(const QByteArray& data)
 
         break;
     }
+        case Request::Login: {
+
+            auto dbResult = m_dbManager.getUserData(requestFromClient.email(), requestFromClient.password());
+            bool canLogin = !dbResult.isEmpty();
+            responseJsonObject.insert("loginResult", canLogin);
+            qDebug() << requestFromClient.email() <<  " | " << requestFromClient.password() << " | " << canLogin;
+
+            break;
+        }
     }
 
     QJsonDocument doc(responseJsonObject);

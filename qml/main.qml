@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.12
+import QtQuick.Dialogs 1.3
 
 ApplicationWindow {
     id: window
@@ -67,7 +68,7 @@ ApplicationWindow {
         id:loginView
         LoginView {
             onLoginRequest: {
-                if (email == "1" && password == "1") {
+                if (response) {
                     loader.sourceComponent = devicePage
                     menuView.currentIndex = 0
                     drawer.open()
@@ -146,13 +147,27 @@ ApplicationWindow {
                         loader.sourceComponent = aboutPage
                         break;
                     case 6:
-                        loader.sourceComponent = loginView
-                        drawer.close()
+                        messageDialog.visible = true
+
                         break;
                     }
                     menuView.currentIndex = index
                 }
             }
         }
+    }
+
+
+    MessageDialog {
+        id: messageDialog
+        title: "Czy chcesz się wylogować?"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            loader.sourceComponent = loginView
+            drawer.close()
+        }
+        onNo: drawer.close()
+
+        Component.onCompleted: visible = false
     }
 }

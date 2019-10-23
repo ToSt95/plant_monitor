@@ -10,7 +10,6 @@ class QTcpSocket;
 class Connector : public QObject
 {
     Q_OBJECT
-
     Q_PROPERTY(bool isConnected READ isConnected NOTIFY connectionStatusChanged)
 
 public:
@@ -19,9 +18,13 @@ public:
     bool isConnected();
     void connectToServer();
     void onConnectionStatusChanged(QAbstractSocket::SocketState socketState);
+    void onReadyRead();
+
+    Q_INVOKABLE void loginRequest(const QString& email, const QString& password);
 
 signals:
-    Q_INVOKABLE void connectionStatusChanged();
+    void connectionStatusChanged();
+    void loginResponse(int response);
 
 private:
     QTcpSocket *m_socket;

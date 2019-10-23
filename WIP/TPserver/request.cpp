@@ -31,3 +31,17 @@ Request::Command Request::command()
     Command commnad = static_cast<Command>(object.value("command").toInt());
     return commnad;
 }
+
+QString Request::email()
+{
+    auto object = m_jsonData.object();
+    QString email = object.value("email").toString();
+    return email;
+}
+
+QString Request::password()
+{
+    auto object = m_jsonData.object();
+    QString password = object.value("password").toString();
+    return password;
+}

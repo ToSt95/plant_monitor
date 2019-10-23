@@ -4,13 +4,11 @@
 #include "connector.h"
 #include <QQmlContext>
 
+
 int main(int argc, char *argv[])
 {
 
     Connector serverConnector;
-    serverConnector.connectToServer();
-
-
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
@@ -26,6 +24,10 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+
+
+    serverConnector.connectToServer();
 
     return app.exec();
 }

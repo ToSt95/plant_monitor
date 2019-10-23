@@ -10,5 +10,6 @@
         <file>qml/AboutView.qml</file>
         <file>qml/RaportsView.qml</file>
         <file>qml/DeviceView.qml</file>
+        <file>img/plant.png</file>
     </qresource>
 </RCC>

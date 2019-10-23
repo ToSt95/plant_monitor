@@ -106,3 +106,19 @@ QVector<QStringList> DbManager::getSoilMoisture()
     }
     return result;
 }
+
+QVector<QStringList> DbManager::getUserData(const QString& email, const QString& password)
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT * FROM user WHERE password='"+password+"' AND email='"+email+"'");
+
+    query.exec();
+    qDebug() << query.lastQuery();
+
+    while(query.next()) {
+       result.append({query.value(0).toString()});
+    }
+    qDebug() << "RESULT" << result;
+    return result;
+}
