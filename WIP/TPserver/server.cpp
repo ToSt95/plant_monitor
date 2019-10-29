@@ -8,7 +8,14 @@
 
 Server::Server()
 {
+    connect(&m_arduino, &ArduinoConnector::arduinoDataReady, this, &Server::onArduinoDataReady);
+    m_timer = new QTimer;
 
+    connect(m_timer, &QTimer::timeout, [this](){
+       qDebug() << "NEW TEMPERATURE REQUEST";
+       m_arduino.sendMessage("/AIR_READ");
+    });
+    m_timer->start(std::chrono::seconds(30));
 }
 
 bool Server::start()
@@ -58,8 +65,8 @@ void Server::onNewRequest(const QByteArray& data)
     Request::Command command = requestFromClient.command();
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 5) {
-        responseJsonObject.insert("error", "invalid command");
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 6) {
+        responseJsonObject.insert("command", -1);
     } else {
         responseJsonObject.insert("command", command);
     }
@@ -109,15 +116,48 @@ void Server::onNewRequest(const QByteArray& data)
 
         break;
     }
-        case Request::Login: {
+    case Request::Login: {
 
             auto dbResult = m_dbManager.getUserData(requestFromClient.email(), requestFromClient.password());
             bool canLogin = !dbResult.isEmpty();
             responseJsonObject.insert("loginResult", canLogin);
-            qDebug() << requestFromClient.email() <<  " | " << requestFromClient.password() << " | " << canLogin;
-
             break;
         }
+
+
+    case Request::Led: {
+        qDebug() << "LED" << requestFromClient.leadState();
+        if(requestFromClient.leadState()) {
+           m_arduino.sendMessage("/LED=ON");
+        } else {
+           m_arduino.sendMessage("/LED=OFF");
+        }
+        return;
+    }
+    }
+    QJsonDocument doc(responseJsonObject);
+    emit responseReady(doc.toBinaryData());
+}
+
+void Server::onArduinoDataReady(QString temp)
+{
+    QStringList result = temp.split(',');
+    QString command = result.first();
+    QJsonObject responseJsonObject;
+
+    qDebug() << "FROM ARDUINO" << temp;
+
+    if (command == "1") {
+        responseJsonObject.insert("command", 1);
+    } else if (command == "2") {
+        responseJsonObject.insert("command", 2);
+    } else if (command == "3") {
+        responseJsonObject.insert("command", 3);
+        QString temp = result.at(1);
+        QString hum = result.at(2);
+        m_dbManager.saveHumAirTemperature(temp, hum);
+        responseJsonObject.insert("temperature", temp);
+        responseJsonObject.insert("humidity", hum);
     }
 
     QJsonDocument doc(responseJsonObject);

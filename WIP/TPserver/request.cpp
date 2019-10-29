@@ -45,3 +45,10 @@ QString Request::password()
     QString password = object.value("password").toString();
     return password;
 }
+
+bool Request::leadState()
+{
+    auto object = m_jsonData.object();
+    bool leadState = object.value("state").toBool();
+    return leadState;
+}

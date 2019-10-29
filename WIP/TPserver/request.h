@@ -9,12 +9,13 @@ class Request
 {
 public:
     Request(const QByteArray& data);
-    enum Command { AirHumidity = 1, AirTemperature, LightIntensity, SoilMoisture, Login};
+    enum Command { AirHumidity = 1, AirTemperature, LightIntensity, SoilMoisture, Login, Led};
     QJsonDocument json();
     QByteArray binary();
     Request::Command command();
     QString email();
     QString password();
+    bool leadState();
 
 private:
     QByteArray m_rawData;

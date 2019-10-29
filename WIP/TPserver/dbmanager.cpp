@@ -3,7 +3,7 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QDebug>
-
+#include <QDateTime>
 DbManager::DbManager(QObject *parent) : QObject(parent)
 {
 
@@ -119,6 +119,16 @@ QVector<QStringList> DbManager::getUserData(const QString& email, const QString&
     while(query.next()) {
        result.append({query.value(0).toString()});
     }
-    qDebug() << "RESULT" << result;
     return result;
+}
+
+void DbManager::saveHumAirTemperature(QString temperature, QString humidity)
+{
+    QSqlQuery query;
+    // format 2019-02-03 12:00:00
+    QString stringTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    query.prepare("INSERT INTO tp_database.air_measurement(humidity, temperature, date) VALUES ("
+                  + temperature + "," + humidity + ",'" + stringTime + "');");
+    query.exec();
+    qDebug() << "QUERY:" << query.lastQuery();
 }

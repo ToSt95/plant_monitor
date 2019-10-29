@@ -6,6 +6,8 @@
 #include <QTcpServer>
 #include "dbmanager.h"
 #include "mailmanager.h"
+#include "arduinoconnector.h"
+#include <QTimer>
 
 class Client;
 
@@ -24,6 +26,7 @@ signals:
 public slots:
     void onClientDisconnected(qintptr descriptor);
     void onNewRequest(const QByteArray& data);
+    void onArduinoDataReady(QString temp);
 
 protected:
     void incomingConnection(qintptr handle);
@@ -36,6 +39,8 @@ private:
     DbManager m_dbManager;
     Email::EmailConfig m_mailConfig;
     Email::Sender* mailSender;
+    ArduinoConnector m_arduino;
+    QTimer* m_timer;
 };
 
 #endif // SERVER_H

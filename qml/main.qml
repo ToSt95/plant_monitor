@@ -67,13 +67,6 @@ ApplicationWindow {
     Component {
         id:loginView
         LoginView {
-            onLoginRequest: {
-                if (response) {
-                    loader.sourceComponent = devicePage
-                    menuView.currentIndex = 0
-                    drawer.open()
-                }
-            }
         }
     }
     Component {
@@ -100,6 +93,7 @@ ApplicationWindow {
         id:devicePage
         DeviceView {}
     }
+
 
     Component {
         id: listDelegate
@@ -169,5 +163,59 @@ ApplicationWindow {
         onNo: drawer.close()
 
         Component.onCompleted: visible = false
+    }
+
+    Rectangle {
+        id:overlay
+        anchors.fill: parent
+        color: "gray"
+        opacity: 0.8
+        visible: false
+
+        Image {
+            id: busyImg
+            anchors.centerIn: parent
+            width: parent.width * 0.3
+            height: width
+            source: "qrc:/img/busy.png"
+
+            RotationAnimation on rotation {
+                loops: Animation.Infinite
+                from: 0
+                to: 360
+            }
+            PropertyAnimation {
+                running: true
+                target: busyImg
+                property: "rotation"
+                duration: 2000
+                from: 0
+                to: 359
+
+                onStopped: {
+
+                        busyImg.rotation = 0;
+                        start()
+
+                }
+            }
+        }
+    }
+
+    Connections {
+        target: connector
+
+        onLoginResponse: {
+            loader.sourceComponent = devicePage
+            menuView.currentIndex = 0
+            drawer.open()
+        }
+        onLedON: {
+            overlay.visible = false
+        }
+
+        onLedOFF: {
+            overlay.visible = false
+        }
     }
 }

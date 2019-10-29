@@ -11,5 +11,7 @@
         <file>qml/RaportsView.qml</file>
         <file>qml/DeviceView.qml</file>
         <file>img/plant.png</file>
+        <file>img/busy.png</file>
+        <file>img/spinner.svg</file>
     </qresource>
 </RCC>

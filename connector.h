@@ -21,10 +21,15 @@ public:
     void onReadyRead();
 
     Q_INVOKABLE void loginRequest(const QString& email, const QString& password);
+    Q_INVOKABLE void ledRequest(bool ledState);
 
 signals:
     void connectionStatusChanged();
+
     void loginResponse(int response);
+    void tempResponse(QString temp, QString hum);
+    void ledON();
+    void ledOFF();
 
 private:
     QTcpSocket *m_socket;

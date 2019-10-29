@@ -4,9 +4,6 @@ import QtQuick.Controls 1.5
 import QtQuick.Controls.Styles 1.4
 
 Item {
-
-    signal loginRequest(var response)
-
     Rectangle {
         id: background
         anchors.centerIn: parent
@@ -74,15 +71,6 @@ Item {
             onClicked: {
                 connector.loginRequest(email.text, password.text)
             }
-        }
-    }
-
-    Connections {
-        target: connector
-
-        onLoginResponse: {
-            console.log("QML login response", response)
-            loginRequest(response)
         }
     }
 }
