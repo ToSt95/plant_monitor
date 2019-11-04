@@ -13,5 +13,10 @@
         <file>img/plant.png</file>
         <file>img/busy.png</file>
         <file>img/spinner.svg</file>
+        <file>img/air.png</file>
+        <file>img/thermometer.svg</file>
+        <file>img/grass.svg</file>
+        <file>img/sunny.svg</file>
+        <file>img/wood.jpg</file>
     </qresource>
 </RCC>

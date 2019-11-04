@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 Item {
     property string text: textInput.text
     property string placeholder
+    property alias echoMode: textInput.echoMode
 
     width: 200
     height: 30

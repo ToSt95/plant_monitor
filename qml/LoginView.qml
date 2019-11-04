@@ -49,6 +49,7 @@ Item {
 
         Input {
             id: password
+            echoMode: TextInput.Password
             placeholder: "hasło..."
         }
 

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.12
 import QtQuick.Dialogs 1.3
+import QtQuick.Layouts 1.12
 
 ApplicationWindow {
     id: window
@@ -71,7 +72,8 @@ ApplicationWindow {
     }
     Component {
         id:measurementPage
-        MeasurementView {}
+        MeasurementView {
+        }
     }
     Component {
         id:orderPage
@@ -194,12 +196,29 @@ ApplicationWindow {
 
                 onStopped: {
 
-                        busyImg.rotation = 0;
-                        start()
+                    busyImg.rotation = 0;
+                    start()
 
                 }
             }
         }
+
+        Text {
+            anchors.topMargin: 10
+            anchors.top: busyImg.bottom
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 20
+            font.bold: true
+            color: "white"
+
+            text: "Czekaj..."
+        }
+
+
+
     }
 
     Connections {
