@@ -14,7 +14,7 @@ ApplicationWindow {
     Image {
         id: background
         anchors.fill: parent
-        source: "qrc:/img/background.jpg"
+        source: "qrc:/img/warter.jpg"
     }
 
     Drawer {
@@ -25,8 +25,8 @@ ApplicationWindow {
 
         background: Rectangle {
             id: drawerBackground
-            color: "black"
-            opacity: 0.8
+            color: "#4d241e"
+            opacity: 0.9
         }
 
         ListView {

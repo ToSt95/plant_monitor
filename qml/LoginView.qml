@@ -27,17 +27,17 @@ Item {
 
             Text {
                 id: connectionText
-                font.pixelSize: 25
+                font.pixelSize: 20
                 font.bold: true
-                text: qsTr("Status serwera:")
+                text: qsTr("Status serwera")
             }
 
             Rectangle {
                 id: connectionIcon
                 color: connector.isConnected ? "green" : "red"
-                width: 30
-                height: 30
-                radius: 30
+                width: 25
+                height: 25
+                radius: 25
             }
 
         }

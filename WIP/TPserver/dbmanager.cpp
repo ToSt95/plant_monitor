@@ -132,3 +132,56 @@ void DbManager::saveHumAirTemperature(QString temperature, QString humidity)
     query.exec();
     qDebug() << "QUERY:" << query.lastQuery();
 }
+
+QVector<QStringList> DbManager::getAirMesurment()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT temperature, humidity, date FROM air_measurement order by date desc limit 1");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // temperature
+        measurement.append(query.value(0).toString());
+        // humidity
+        measurement.append(query.value(1).toString());
+        // date time
+        measurement.append(query.value(2).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QVector<QStringList> DbManager::getSoilMesurment()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT moisture, date FROM soil_measurement order by date desc limit 1");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // moisture
+        measurement.append(query.value(0).toString());
+        // date time
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QVector<QStringList> DbManager::getLightMesurment()
+{
+    QSqlQuery query;
+    QVector<QStringList> result{};
+    query.prepare("SELECT intensity, datetime FROM light_measurement order by datetime desc limit 1");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // intensity
+        measurement.append(query.value(0).toString());
+        // date time
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}

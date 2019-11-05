@@ -7,7 +7,6 @@ Item {
     Rectangle {
         id: placeHolder
         anchors.fill: parent
-        color: "brown"
 
         ColumnLayout {
             anchors.fill: parent
@@ -54,13 +53,6 @@ Item {
         }
     }
 
-    Connections {
-        target: connector
 
-        onTempResponse: {
-            temValue.text = temp + "C"
-            humValue.text = hum + "%"
-        }
-    }
 
 }

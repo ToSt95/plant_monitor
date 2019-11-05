@@ -3,7 +3,7 @@
 #include <QApplication>
 #include "connector.h"
 #include <QQmlContext>
-
+#include <QTimer>
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +28,9 @@ int main(int argc, char *argv[])
 
 
     serverConnector.connectToServer();
+    serverConnector.m_timer->start(std::chrono::seconds(21));
+    serverConnector.m_timer2->start(std::chrono::seconds(17));
+    serverConnector.m_timer3->start(std::chrono::seconds(7));
 
     return app.exec();
 }

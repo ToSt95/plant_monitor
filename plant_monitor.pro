@@ -1,4 +1,4 @@
-QT += qml quick core charts widgets network
+QT += qml quick core charts widgets network svg
 
 CONFIG += c++11
 

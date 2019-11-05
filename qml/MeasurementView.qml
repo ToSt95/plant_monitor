@@ -23,8 +23,8 @@ Item
                 Rectangle {
                     id: airHum
                     color: "transparent"
-                    border.color: "black"
-                    border.width: 4
+                    border.color: "#733a31"
+                    border.width: 5
                     radius: 10
                     Layout.alignment: Qt.AlignHCenter
                     width: 300
@@ -50,6 +50,8 @@ Item
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             text: "POWIETRZE"
+                            font.pixelSize: 25
+                            font.bold: true
                         }
                     }
 
@@ -67,47 +69,61 @@ Item
                             text: "WILGOTNOŚĆ"
                         }
                         Text {
+                            id: airHumValue
                             text: "-"
                         }
                         Text {
+
                             text: "TEMPERATURA"
                         }
                         Text {
+                            id: airTempValue
                             text: "-"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
+                            id: airDateValue
                             text: "-"
                         }
                         Text {
                             text: "GODZINA"
                         }
                         Text {
+                            id: airTimeValue
                             text: "-"
                         }
 
                     }
 
-                    Image {
-                        id: imgAir
+                    Rectangle {
                         anchors.margins: 10
                         anchors.top: headerAir.bottom
                         anchors.bottom: parent.bottom
                         anchors.right: parent.right
                         anchors.left: airData.right
-                        smooth: true
-                        source: "qrc:/img/thermometer.svg"
+                        color: "transparent"
+
+                        Image {
+                            id: imgAir
+                            anchors.centerIn: parent
+                            smooth: true
+                            source: "qrc:/img/thermometer.svg"
+                            width: 60
+                            height: 120
+                        }
                     }
+
+
 
                 }
 
                 Rectangle {
                     id: soil
                     color: "white"
-                    border.color: "black"
-                    border.width: 4
+                    border.color: "#733a31"
+                    border.width: 5
                     radius: 10
                     Layout.alignment: Qt.AlignHCenter
                     width: 300
@@ -132,6 +148,8 @@ Item
                             anchors.fill: parent
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
+                            font.pixelSize: 25
+                            font.bold: true
                             text: "GLEBA"
                         }
                     }
@@ -150,39 +168,50 @@ Item
                             text: "WILGOTNOŚĆ"
                         }
                         Text {
+                            id: soilHumValue
                             text: "-"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
+                            id: soilDateValue
                             text: "-"
                         }
                         Text {
-                            text: "Godzina"
+                            text: "GODZINA"
                         }
                         Text {
+                            id: soilTimeValue
                             text: "-"
                         }
 
                     }
-
-                    Image {
-                        id: soilAir
+                    Rectangle {
                         anchors.margins: 10
                         anchors.top: headerSoil.bottom
                         anchors.bottom: parent.bottom
                         anchors.right: parent.right
                         anchors.left: soilData.right
-                        smooth: true
-                        source: "qrc:/img/grass.svg"
+                        color: "transparent"
+
+                        Image {
+                            id: soilAir
+                            anchors.centerIn: parent
+                            smooth: true
+                            source: "qrc:/img/grass.svg"
+                            width: 100
+                            height: 100
+                        }
                     }
+
+
                 }
 
                 Rectangle {
                     id: light
-                    border.color: "black"
-                    border.width: 4
+                    border.color: "#733a31"
+                    border.width: 5
                     radius: 10
                     Layout.alignment: Qt.AlignHCenter
                     width: 300
@@ -207,6 +236,8 @@ Item
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             text: "NASŁONECZNIENIE"
+                            font.pixelSize: 25
+                            font.bold: true
                         }
                     }
 
@@ -222,40 +253,77 @@ Item
                         columnSpacing: 5
 
                         Text {
-                            text: "NASŁONECZNIENIE"
+                            text: "LUKS"
                         }
                         Text {
+                            id: lightValue
                             text: "-"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
+                            id: lightDateValue
                             text: "-"
                         }
                         Text {
                             text: "GODZINA"
                         }
                         Text {
+                            id:lightTimeValue
                             text: "-"
                         }
 
                     }
 
-                    Image {
-                        id: lightAir
+                    Rectangle {
                         anchors.margins: 10
                         anchors.top: headerLight.bottom
                         anchors.bottom: parent.bottom
                         anchors.right: parent.right
                         anchors.left: lightData.right
-                        smooth: true
-                        source: "qrc:/img/sunny.svg"
-                        width: 100
-                        height: 100
+                        color: "transparent"
+
+                        Image {
+                            id: lightAir
+                            anchors.centerIn: parent
+                            smooth: true
+                            source: "qrc:/img/sunny.svg"
+                            width: 100
+                            height: 100
+                        }
                     }
+
+
                 }
             }
+        }
+    }
+
+    Connections {
+        target: connector
+
+        onTempResponse: {
+            console.log(temp, hum, date, time)
+
+            airTempValue.text = temp + "C"
+            airHumValue.text = hum + "%"
+            airDateValue.text = date
+            airTimeValue.text = time
+        }
+
+        onSoilResponse: {
+            console.log(soil, date, time)
+            soilHumValue.text = soil + "%"
+            soilDateValue.text = date
+            soilTimeValue.text = time
+        }
+
+        onLightResponse: {
+            console.log(light, date, time)
+            lightValue.text = light
+            lightDateValue.text = date
+            lightTimeValue.text = time
         }
     }
 }

@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QDateTime>
+#include <QString>
 
 Server::Server()
 {
@@ -12,7 +14,6 @@ Server::Server()
     m_timer = new QTimer;
 
     connect(m_timer, &QTimer::timeout, [this](){
-       qDebug() << "NEW TEMPERATURE REQUEST";
        m_arduino.sendMessage("/AIR_READ");
     });
     m_timer->start(std::chrono::seconds(30));
@@ -65,7 +66,7 @@ void Server::onNewRequest(const QByteArray& data)
     Request::Command command = requestFromClient.command();
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 6) {
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 10) {
         responseJsonObject.insert("command", -1);
     } else {
         responseJsonObject.insert("command", command);
@@ -94,28 +95,6 @@ void Server::onNewRequest(const QByteArray& data)
 
         break;
     }
-    case Request::LightIntensity: {
-        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
-        int counter = 1;
-        for (auto measurement : dbResult) {
-            responseJsonObject.insert(QString::number(counter) + ". Light intensity:", measurement.at(0));
-            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
-            counter++;
-        }
-
-        break;
-    }
-    case Request::SoilMoisture: {
-        QVector<QStringList> dbResult = m_dbManager.getAirHumidity();
-        int counter = 1;
-        for (auto measurement : dbResult) {
-            responseJsonObject.insert(QString::number(counter) + ". Soil moisture:", measurement.at(0));
-            responseJsonObject.insert(QString::number(counter) + ". Date:", measurement.at(1));
-            counter++;
-        }
-
-        break;
-    }
     case Request::Login: {
 
             auto dbResult = m_dbManager.getUserData(requestFromClient.email(), requestFromClient.password());
@@ -126,7 +105,6 @@ void Server::onNewRequest(const QByteArray& data)
 
 
     case Request::Led: {
-        qDebug() << "LED" << requestFromClient.leadState();
         if(requestFromClient.leadState()) {
            m_arduino.sendMessage("/LED=ON");
         } else {
@@ -134,6 +112,57 @@ void Server::onNewRequest(const QByteArray& data)
         }
         return;
     }
+
+    case Request::Air: {
+        qDebug() << "AIR REQUESTED";
+        QVector<QStringList> dbResult = m_dbManager.getAirMesurment();
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert("temperature", measurement.at(0));
+            responseJsonObject.insert("humidity", measurement.at(1));
+            auto date = measurement.at(2).split('T').first();
+            auto time = measurement.at(2).split('T').last();
+            qDebug() << date << time;
+
+            time.chop(7);
+
+            responseJsonObject.insert("date", date);
+            responseJsonObject.insert("time", time);
+        }
+        break;
+    }
+    case Request::LightIntensity: {
+        qDebug() << "@@@@@@@@@@@@@@@@@@@@@";
+        QVector<QStringList> dbResult = m_dbManager.getLightMesurment();
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert("intensity", measurement.at(0));
+
+            auto date = measurement.at(1).split('T').first();
+            auto time = measurement.at(1).split('T').last();
+            time.chop(7);
+
+
+            qDebug() << "@@@@@" << measurement.at(0) << date << time;
+            responseJsonObject.insert("date", date);
+            responseJsonObject.insert("time", time);
+        }
+
+        break;
+    }
+    case Request::SoilMoisture: {
+        QVector<QStringList> dbResult = m_dbManager.getSoilMesurment();
+        for (auto measurement : dbResult) {
+            responseJsonObject.insert("moisture", measurement.at(0));
+
+            auto date = measurement.at(1).split('T').first();
+            auto time = measurement.at(1).split('T').last();
+            time.chop(7);
+
+            responseJsonObject.insert("date", date);
+            responseJsonObject.insert("time", time);
+        }
+        break;
+    }
+
     }
     QJsonDocument doc(responseJsonObject);
     emit responseReady(doc.toBinaryData());
@@ -156,8 +185,8 @@ void Server::onArduinoDataReady(QString temp)
         QString temp = result.at(1);
         QString hum = result.at(2);
         m_dbManager.saveHumAirTemperature(temp, hum);
-        responseJsonObject.insert("temperature", temp);
-        responseJsonObject.insert("humidity", hum);
+        //responseJsonObject.insert("temperature", temp);
+        //responseJsonObject.insert("humidity", hum);
     }
 
     QJsonDocument doc(responseJsonObject);
