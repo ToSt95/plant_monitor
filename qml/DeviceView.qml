@@ -7,52 +7,40 @@ Item {
     Rectangle {
         id: placeHolder
         anchors.fill: parent
+        color: "transparent"
 
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: 10
-
-            Switch {
-                id: ledSwitch
-                Layout.alignment: Qt.AlignHCenter
-                text: "LED"
-
-                onToggled: {
-                    var isChecked = ledSwitch.checked
-                    connector.ledRequest(isChecked)
-                    overlay.visible = true
-                }
+        GridLayout {
+            columns: 2
+            anchors.centerIn: parent
+            Text {
+               id: deviceName
+               text: "NAZWA"
             }
 
-            Row {
-                Layout.alignment: Qt.AlignHCenter
-
-                Text {
-                    id: temLabel
-                    text: qsTr("TEMPERATURE:")
-                }
-                Text {
-                    id: temValue
-                    text: qsTr("-")
-                }
-
+            Input {
+                id: deviceNameEdit
+                placeholder: "Urządzenie testowe"
             }
 
-            Row {
-               Layout.alignment: Qt.AlignHCenter
-               Text {
-                   id: humLabel
-                   text: qsTr("HUMADITY:")
-               }
-               Text {
-                   id: humValue
-                   text: qsTr("-")
-               }
+            Text {
+                id: deviceLocal
+                text: "LOKALIZACJA"
+            }
 
+            Input {
+                id: deviceLocalEdit
+                placeholder: "Lublin"
+            }
+
+            Text {
+                id: deviceIp
+                text: "IP"
+            }
+
+            Input {
+                id: deviceIpEdit
+                placeholder: "192.168.1.231"
             }
         }
     }
-
-
-
 }
