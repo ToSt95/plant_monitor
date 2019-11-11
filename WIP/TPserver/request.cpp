@@ -52,3 +52,17 @@ bool Request::leadState()
     bool leadState = object.value("state").toBool();
     return leadState;
 }
+
+QString Request::date()
+{
+    auto object = m_jsonData.object();
+    QString date = object.value("date").toString();
+    return date;
+}
+
+bool Request::removeData()
+{
+    auto object = m_jsonData.object();
+    bool remove = object.value("remove").toBool();
+    return remove;
+}

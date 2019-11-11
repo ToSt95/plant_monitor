@@ -30,6 +30,13 @@ public:
     Q_INVOKABLE void soilRequest();
     Q_INVOKABLE void lightRequest();
 
+
+    void initAirData();
+    void initSoilData();
+    void initLightData();
+    void initScheduleData();
+    void updateSchedule(const QString& date, bool remove = false) const;
+
 signals:
     void connectionStatusChanged();
 
@@ -40,9 +47,15 @@ signals:
     void ledON();
     void ledOFF();
 
+    void newAirData(QString temp, QString hum, QString date, QString time);
+    void newSoilData(QString hum, QString date, QString time);
+    void newLightData(QString hum, QString date, QString time);
+    void newScheduleData(QString date);
+
 private:
     QTcpSocket *m_socket;
     bool m_isConnected{false};
+    bool modelLoaded{false};
 };
 
 #endif // CONNECTOR_H

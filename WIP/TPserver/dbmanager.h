@@ -24,6 +24,12 @@ public:
     QVector<QStringList> getAirMesurment();
     QVector<QStringList> getSoilMesurment();
     QVector<QStringList> getLightMesurment();
+    QList<QStringList> initAirData();
+    QList<QString> initScheduleData();
+    QList<QStringList> initSoilData();
+    QList<QStringList> initLightData();
+    void updateSchedule(const QString& date, bool remove);
+
 
 private:
     Config m_config;

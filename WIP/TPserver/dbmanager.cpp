@@ -130,7 +130,6 @@ void DbManager::saveHumAirTemperature(QString temperature, QString humidity)
     query.prepare("INSERT INTO tp_database.air_measurement(humidity, temperature, date) VALUES ("
                   + temperature + "," + humidity + ",'" + stringTime + "');");
     query.exec();
-    qDebug() << "QUERY:" << query.lastQuery();
 }
 
 QVector<QStringList> DbManager::getAirMesurment()
@@ -184,4 +183,85 @@ QVector<QStringList> DbManager::getLightMesurment()
         result.append(measurement);
     }
     return result;
+}
+
+QList<QStringList> DbManager::initAirData()
+{
+    QSqlQuery query;
+    QList<QStringList> result{};
+    query.prepare("SELECT temperature, humidity, date FROM air_measurement order by date limit 500");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // temperature
+        measurement.append(query.value(0).toString());
+        // humidity
+        measurement.append(query.value(1).toString());
+        // date time
+        measurement.append(query.value(2).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QList<QString> DbManager::initScheduleData()
+{
+    QSqlQuery query;
+    QList<QString> result{};
+    query.prepare("SELECT date FROM watering_schedule order by date");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // date
+        measurement.append(query.value(0).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QList<QStringList> DbManager::initSoilData()
+{
+    QSqlQuery query;
+    QList<QStringList> result{};
+    query.prepare("SELECT moisture, date FROM soil_measurement order by date");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // moisture
+        measurement.append(query.value(0).toString());
+        // date time
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+QList<QStringList> DbManager::initLightData()
+{
+    QSqlQuery query;
+    QList<QStringList> result{};
+    query.prepare("SELECT intensity, datetime FROM light_measurement order by datetime");
+    query.exec();
+    while(query.next()) {
+        QStringList measurement;
+        // intensity
+        measurement.append(query.value(0).toString());
+        // date time
+        measurement.append(query.value(1).toString());
+        result.append(measurement);
+    }
+    return result;
+}
+
+void DbManager::updateSchedule(const QString &date, bool remove)
+{
+    QSqlQuery query;
+
+    if (remove) {
+        query.prepare("DELETE FROM tp_database.watering_schedule WHERE date='" + date + "';");
+    } else {
+        query.prepare("INSERT INTO tp_database.watering_schedule(date) VALUES ('" + date + "');");
+    }
+    query.exec();
+    qDebug() << "QUERY:" << query.lastQuery();
 }

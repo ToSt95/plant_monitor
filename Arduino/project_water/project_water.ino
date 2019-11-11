@@ -88,8 +88,9 @@ void handleReuests(String request, WiFiClient client) {
   if (request.indexOf("/LED=ON") != -1)  
   {
     digitalWrite(ledPin, HIGH);
+    delay(5000);
+    digitalWrite(ledPin, LOW);
     client.println("1,LED_ON");
-
   } 
   else if (request.indexOf("/LED=OFF") != -1) 
   {

@@ -5,6 +5,7 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 #include <QTimer>
+#include <QJsonArray>
 
 Connector::Connector(QObject* parent)
     :QObject(parent), m_socket(new QTcpSocket)
@@ -53,6 +54,14 @@ void Connector::onConnectionStatusChanged(QAbstractSocket::SocketState socketSta
         QTimer::singleShot(5000, this, &Connector::connectToServer);
     } else {
         m_isConnected = true;
+        if (!modelLoaded) {
+            initScheduleData();
+            initAirData();
+            initSoilData();
+            initLightData();
+
+            modelLoaded = true;
+        }
     }
     emit connectionStatusChanged();
 }
@@ -88,6 +97,41 @@ void Connector::onReadyRead()
         QString date = object.value("date").toString();
         QString time = object.value("time").toString();
         emit lightResponse(light, date, time);
+    } else if (command == 8) {
+        auto array = object.value("data").toArray();
+
+        for (auto obj : array) {
+            QString temp = obj.toObject().value("temperature").toString();
+            QString hum = obj.toObject().value("humidity").toString();
+            QString date = obj.toObject().value("date").toString();
+            QString time = obj.toObject().value("time").toString();
+            emit newAirData(temp, hum, date, time);
+        }
+    } else if (command == 10) {
+        auto array = object.value("data").toArray();
+
+        for (auto obj : array) {
+            QString hum = obj.toObject().value("humidity").toString();
+            QString date = obj.toObject().value("date").toString();
+            QString time = obj.toObject().value("time").toString();
+            emit newSoilData(hum, date, time);
+        }
+    } else if (command == 11) {
+        auto array = object.value("data").toArray();
+
+        for (auto obj : array) {
+            QString light = obj.toObject().value("light").toString();
+            QString date = obj.toObject().value("date").toString();
+            QString time = obj.toObject().value("time").toString();
+            emit newLightData(light, date, time);
+        }
+    }else if (command == 9) {
+        auto array = object.value("data").toArray();
+
+        for (auto obj : array) {
+            QString date = obj.toObject().value("date").toString();
+            emit newScheduleData(date);
+        }
     }
 }
 
@@ -142,6 +186,59 @@ void Connector::lightRequest()
     QJsonObject object;
     QJsonValue idRequest = 3;
     object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void Connector::initAirData()
+{
+    qDebug() << "REQUEST SENT";
+    QJsonObject object;
+    QJsonValue idRequest = 8;
+    object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void Connector::initSoilData()
+{
+    QJsonObject object;
+    QJsonValue idRequest = 10;
+    object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void Connector::initLightData()
+{
+    QJsonObject object;
+    QJsonValue idRequest = 11;
+    object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void Connector::initScheduleData()
+{
+    QJsonObject object;
+    QJsonValue idRequest = 9;
+    object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}
+
+void Connector::updateSchedule(const QString &date, bool remove) const
+{
+    QJsonObject object;
+    QJsonValue idRequest = 12;
+    object.insert("command", idRequest);
+    object.insert("date", date);
+    object.insert("remove", remove);
     auto doc = QJsonDocument(object);
     m_socket->write(doc.toBinaryData());
     m_socket->flush();

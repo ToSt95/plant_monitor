@@ -7,6 +7,7 @@
 #include <QJsonValue>
 #include <QDateTime>
 #include <QString>
+#include <QJsonArray>
 
 Server::Server()
 {
@@ -66,7 +67,7 @@ void Server::onNewRequest(const QByteArray& data)
     Request::Command command = requestFromClient.command();
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 10) {
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 13) {
         responseJsonObject.insert("command", -1);
     } else {
         responseJsonObject.insert("command", command);
@@ -114,7 +115,6 @@ void Server::onNewRequest(const QByteArray& data)
     }
 
     case Request::Air: {
-        qDebug() << "AIR REQUESTED";
         QVector<QStringList> dbResult = m_dbManager.getAirMesurment();
         for (auto measurement : dbResult) {
             responseJsonObject.insert("temperature", measurement.at(0));
@@ -131,7 +131,6 @@ void Server::onNewRequest(const QByteArray& data)
         break;
     }
     case Request::LightIntensity: {
-        qDebug() << "@@@@@@@@@@@@@@@@@@@@@";
         QVector<QStringList> dbResult = m_dbManager.getLightMesurment();
         for (auto measurement : dbResult) {
             responseJsonObject.insert("intensity", measurement.at(0));
@@ -139,9 +138,6 @@ void Server::onNewRequest(const QByteArray& data)
             auto date = measurement.at(1).split('T').first();
             auto time = measurement.at(1).split('T').last();
             time.chop(7);
-
-
-            qDebug() << "@@@@@" << measurement.at(0) << date << time;
             responseJsonObject.insert("date", date);
             responseJsonObject.insert("time", time);
         }
@@ -163,8 +159,83 @@ void Server::onNewRequest(const QByteArray& data)
         break;
     }
 
+    case Request::InitAir: {
+        QList<QStringList> dbResult = m_dbManager.initAirData();
+        QJsonArray array;
+        for (auto measurement : dbResult) {
+            QJsonObject obj;
+            obj.insert("temperature", measurement.at(0));
+            obj.insert("humidity" , measurement.at(1));
+            auto date = measurement.at(2).split('T').first();
+            auto time = measurement.at(2).split('T').last();
+            time.chop(7);
+
+            obj.insert("date", date);
+            obj.insert("time", time);
+            array.append(obj);
+        }
+
+        responseJsonObject.insert("data", array);
+        break;
+    }
+    case Request::InitSoil: {
+        QList<QStringList> dbResult = m_dbManager.initSoilData();
+        QJsonArray array;
+        for (auto measurement : dbResult) {
+            QJsonObject obj;
+            obj.insert("humidity" , measurement.at(0));
+            auto date = measurement.at(1).split('T').first();
+            auto time = measurement.at(1).split('T').last();
+            time.chop(7);
+
+            obj.insert("date", date);
+            obj.insert("time", time);
+            array.append(obj);
+        }
+
+        responseJsonObject.insert("data", array);
+        break;
+    }
+    case Request::InitLight: {
+        QList<QStringList> dbResult = m_dbManager.initLightData();
+        QJsonArray array;
+        for (auto measurement : dbResult) {
+            QJsonObject obj;
+            obj.insert("light" , measurement.at(0));
+            auto date = measurement.at(1).split('T').first();
+            auto time = measurement.at(1).split('T').last();
+            time.chop(7);
+
+            obj.insert("date", date);
+            obj.insert("time", time);
+            array.append(obj);
+        }
+
+        responseJsonObject.insert("data", array);
+        break;
+    }
+    case Request::ScheduleUpdate: {
+
+        bool remove = requestFromClient.removeData();
+        QString date = requestFromClient.date();
+        m_dbManager.updateSchedule(date, remove);
+        break;
+    }
+    case Request::InitSchedule: {
+        QList<QString> dbResult = m_dbManager.initScheduleData();
+        QJsonArray array;
+        for (auto measurement : dbResult) {
+            QJsonObject obj;
+            obj.insert("date" , measurement);
+            array.append(obj);
+        }
+
+        responseJsonObject.insert("data", array);
+        break;
+    }
     }
     QJsonDocument doc(responseJsonObject);
+    qDebug() << doc;
     emit responseReady(doc.toBinaryData());
 }
 

@@ -14,8 +14,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        airdatamodel.cpp \
         connector.cpp \
-        main.cpp
+        lightdatamodel.cpp \
+        main.cpp \
+        modelloader.cpp \
+        schedule.cpp \
+        soildatamodel.cpp
 
 RESOURCES += \
     qml.qrc
@@ -46,4 +51,9 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 }
 
 HEADERS += \
-    connector.h
+    airdatamodel.h \
+    connector.h \
+    lightdatamodel.h \
+    modelloader.h \
+    schedule.h \
+    soildatamodel.h

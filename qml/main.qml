@@ -34,9 +34,6 @@ ApplicationWindow {
             anchors.fill: parent
             model: ListModel {
                 ListElement {
-                    name: "Urządzenie"
-                }
-                ListElement {
                     name: "Odczyt"
                 }
                 ListElement {
@@ -77,7 +74,17 @@ ApplicationWindow {
     }
     Component {
         id:orderPage
-        OrderView {}
+        OrderView {
+        id: calendarView
+
+        onReloadView: {
+            // workaround
+            loader.sourceComponent = reportsPage
+            loader.sourceComponent = orderPage
+        }
+        }
+
+
     }
     Component {
         id:reportsPage
@@ -125,24 +132,21 @@ ApplicationWindow {
                 onClicked: {
                     switch(index) {
                     case 0:
-                        loader.sourceComponent = devicePage
-                        break;
-                    case 1:
                         loader.sourceComponent = measurementPage
                         break;
-                    case 2:
+                    case 1:
                         loader.sourceComponent = orderPage
                         break;
-                    case 3:
+                    case 2:
                         loader.sourceComponent = reportsPage
                         break;
-                    case 4:
+                    case 3:
                         loader.sourceComponent = settingsPage
                         break;
-                    case 5:
+                    case 4:
                         loader.sourceComponent = aboutPage
                         break;
-                    case 6:
+                    case 5:
                         messageDialog.visible = true
 
                         break;
@@ -214,7 +218,7 @@ ApplicationWindow {
             font.bold: true
             color: "white"
 
-            text: "Czekaj..."
+            text: "Trwa podlewanie..."
         }
 
 
@@ -225,7 +229,7 @@ ApplicationWindow {
         target: connector
 
         onLoginResponse: {
-            loader.sourceComponent = devicePage
+            loader.sourceComponent = measurementPage
             menuView.currentIndex = 0
             drawer.open()
         }
@@ -237,4 +241,14 @@ ApplicationWindow {
             overlay.visible = false
         }
     }
+    Connections {
+        target: calendarView
+
+        onReloadView: {
+            console.log("RELOAD@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            loader.sourceComponent = ""
+            loader.sourceComponent = orderPage
+        }
+    }
+
 }

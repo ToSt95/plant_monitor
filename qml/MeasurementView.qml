@@ -70,7 +70,7 @@ Item
                         }
                         Text {
                             id: airHumValue
-                            text: "-"
+                            text: airModel.getNewestHumidity() + "%"
                         }
                         Text {
 
@@ -78,20 +78,52 @@ Item
                         }
                         Text {
                             id: airTempValue
-                            text: "-"
+                            text: airModel.getNewestTemperature() + "C"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
                             id: airDateValue
-                            text: "-"
+                            text: airModel.getNewestDate()
                         }
                         Text {
                             text: "GODZINA"
                         }
                         Text {
                             id: airTimeValue
+                            text: airModel.getNewestTime()
+                        }
+
+                        Text {
+                            id: maxAirTempLabel
+                            text: "MAX TEMP"
+                        }
+                        Text {
+                            text: "-"
+                        }
+
+                        Text {
+                            id: minAirTempLabel
+                            text: "MIN TEMP."
+                        }
+                        Text {
+                            text: "-"
+                        }
+
+                        Text {
+                            id: maxAirHumLabel
+                            text: "MAX WILG."
+                        }
+                        Text {
+                            text: "-"
+                        }
+
+                        Text {
+                            id: minHumTempLabel
+                            text: "MIN WILG."
+                        }
+                        Text {
                             text: "-"
                         }
 
@@ -169,20 +201,36 @@ Item
                         }
                         Text {
                             id: soilHumValue
-                            text: "-"
+                            text: soilModel.getNewestHumidity() + "%"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
                             id: soilDateValue
-                            text: "-"
+                            text: soilModel.getNewestDate()
                         }
                         Text {
                             text: "GODZINA"
                         }
                         Text {
                             id: soilTimeValue
+                            text: soilModel.getNewestTime()
+                        }
+
+                        Text {
+                            id: maxSoilHumLabel
+                            text: "MAX WILG."
+                        }
+                        Text {
+                            text: "-"
+                        }
+
+                        Text {
+                            id: minSoilTempLabel
+                            text: "MIN WILG."
+                        }
+                        Text {
                             text: "-"
                         }
 
@@ -257,20 +305,36 @@ Item
                         }
                         Text {
                             id: lightValue
-                            text: "-"
+                            text: lightModel.getNewestLumens() + " L"
                         }
                         Text {
                             text: "DATA"
                         }
                         Text {
                             id: lightDateValue
-                            text: "-"
+                            text: lightModel.getNewestDate()
                         }
                         Text {
                             text: "GODZINA"
                         }
                         Text {
                             id:lightTimeValue
+                            text: lightModel.getNewestTime()
+                        }
+
+                        Text {
+                            id: maxLighLabel
+                            text: "MAX WILG."
+                        }
+                        Text {
+                            text: "-"
+                        }
+
+                        Text {
+                            id: minLighLabel
+                            text: "MIN WILG."
+                        }
+                        Text {
                             text: "-"
                         }
 
@@ -301,29 +365,32 @@ Item
     }
 
     Connections {
-        target: connector
+        target: airModel
 
-        onTempResponse: {
-            console.log(temp, hum, date, time)
-
-            airTempValue.text = temp + "C"
-            airHumValue.text = hum + "%"
-            airDateValue.text = date
-            airTimeValue.text = time
+        onNewDataAvailable: {
+            airTempValue.text = airModel.getNewestTemperature() + "C"
+            airHumValue.text = airModel.getNewestHumidity() + "%"
+            airDateValue.text = airModel.getNewestDate()
+            airTimeValue.text = airModel.getNewestTime()
         }
+    }
+    Connections {
+        target: soilModel
 
-        onSoilResponse: {
-            console.log(soil, date, time)
-            soilHumValue.text = soil + "%"
-            soilDateValue.text = date
-            soilTimeValue.text = time
+        onNewDataAvailable: {
+            soilHumValue.text = soilModel.getNewestHumidity() + "%"
+            soilDateValue.text = soilModel.getNewestDate()
+            soilTimeValue.text = soilModel.getNewestTime()
         }
+    }
 
-        onLightResponse: {
-            console.log(light, date, time)
-            lightValue.text = light
-            lightDateValue.text = date
-            lightTimeValue.text = time
+    Connections {
+        target: lightModel
+
+        onNewDataAvailable: {
+            lightValue.text = lightModel.getNewestLumens() + " L"
+            lightDateValue.text = lightModel.getNewestDate()
+            lightTimeValue.text = lightModel.getNewestTime()
         }
     }
 }
