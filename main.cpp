@@ -6,7 +6,6 @@
 #include <QTimer>
 #include "schedule.h"
 #include "airdatamodel.h"
-#include "modelloader.h"
 #include "soildatamodel.h"
 #include "lightdatamodel.h"
 

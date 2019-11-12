@@ -18,6 +18,7 @@ ApplicationWindow {
     }
 
     Drawer {
+        x:10
         id: drawer
         width: 0.5 * window.width
         height: window.height
@@ -151,6 +152,7 @@ ApplicationWindow {
 
                         break;
                     }
+                     drawer.close()
                     menuView.currentIndex = index
                 }
             }
@@ -239,15 +241,6 @@ ApplicationWindow {
 
         onLedOFF: {
             overlay.visible = false
-        }
-    }
-    Connections {
-        target: calendarView
-
-        onReloadView: {
-            console.log("RELOAD@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            loader.sourceComponent = ""
-            loader.sourceComponent = orderPage
         }
     }
 
