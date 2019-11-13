@@ -36,6 +36,12 @@ public:
     void initLightData();
     void initScheduleData();
     void updateSchedule(const QString& date, bool remove = false) const;
+    void saveSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+                    const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
+                    const QString& email, const QString& hour);
+    void initSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+                            const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
+                            const QString& email, const QString& hour);
 
 signals:
     void connectionStatusChanged();

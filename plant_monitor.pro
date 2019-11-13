@@ -19,6 +19,7 @@ SOURCES += \
         lightdatamodel.cpp \
         main.cpp \
         schedule.cpp \
+        settings.cpp \
         soildatamodel.cpp
 
 RESOURCES += \
@@ -54,4 +55,5 @@ HEADERS += \
     connector.h \
     lightdatamodel.h \
     schedule.h \
+    settings.h \
     soildatamodel.h

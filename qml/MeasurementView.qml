@@ -100,7 +100,8 @@ Item
                             text: "MAX TEMP"
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(airTempValue.text) > parseInt(appsettings.maxTemp) ? "red" : "black";
+                            text: appsettings.maxTemp
                         }
 
                         Text {
@@ -108,7 +109,8 @@ Item
                             text: "MIN TEMP."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(airTempValue.text) < parseInt(appsettings.minTemp) ? "red" : "black";
+                            text: appsettings.minTemp
                         }
 
                         Text {
@@ -116,7 +118,8 @@ Item
                             text: "MAX WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(airHumValue.text) > parseInt(appsettings.maxWA) ? "red" : "black";
+                            text: appsettings.maxWA
                         }
 
                         Text {
@@ -124,7 +127,8 @@ Item
                             text: "MIN WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(airHumValue.text) < parseInt(appsettings.minWA) ? "red" : "black";
+                            text: appsettings.minWA
                         }
 
                     }
@@ -223,7 +227,8 @@ Item
                             text: "MAX WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(soilHumValue.text) > parseInt(appsettings.maxWS) ? "red" : "black";
+                            text: appsettings.maxWS
                         }
 
                         Text {
@@ -231,7 +236,8 @@ Item
                             text: "MIN WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(soilHumValue.text) < parseInt(appsettings.minWS) ? "red" : "black";
+                            text: appsettings.minWS
                         }
 
                     }
@@ -327,7 +333,8 @@ Item
                             text: "MAX WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(lightValue.text) > parseInt(appsettings.maxL) ? "red" : "black";
+                            text: appsettings.maxL
                         }
 
                         Text {
@@ -335,7 +342,8 @@ Item
                             text: "MIN WILG."
                         }
                         Text {
-                            text: "-"
+                            color: parseInt(lightValue.text) < parseInt(appsettings.minL) ? "red" : "black";
+                            text: appsettings.minL
                         }
 
                     }

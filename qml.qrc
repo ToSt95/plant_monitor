@@ -19,5 +19,6 @@
         <file>img/sunny.svg</file>
         <file>img/wood.jpg</file>
         <file>img/warter.jpg</file>
+        <file>img/drop.svg</file>
     </qresource>
 </RCC>

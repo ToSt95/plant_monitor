@@ -243,3 +243,36 @@ void Connector::updateSchedule(const QString &date, bool remove) const
     m_socket->write(doc.toBinaryData());
     m_socket->flush();
 }
+
+void Connector::initSettingsValues(const QString &minTemp, const QString &maxTemp,
+                                   const QString &minWA, const QString &maxWA,
+                                   const QString &minWS, const QString &maxWS,
+                                   const QString &minL, const QString &maxL,
+                                   const QString &email, const QString &hour)
+{
+
+}
+
+void Connector::saveSettingsValues(const QString &minTemp, const QString &maxTemp,
+                           const QString &minWA, const QString &maxWA,
+                           const QString &minWS, const QString &maxWS,
+                           const QString &minL, const QString &maxL,
+                           const QString &email, const QString &hour)
+{
+    QJsonObject object;
+    QJsonValue idRequest = 15;
+    object.insert("command", idRequest);
+    object.insert("minTemp", minTemp);
+    object.insert("maxTemp", maxTemp);
+    object.insert("minWA", minWA);
+    object.insert("maxWA", maxWA);
+    object.insert("minWS", minWS);
+    object.insert("maxWS", maxWS);
+    object.insert("minL", minL);
+    object.insert("maxL", maxL);
+    object.insert("email", email);
+    object.insert("hour", hour);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
+}

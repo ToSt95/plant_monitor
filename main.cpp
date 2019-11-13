@@ -8,6 +8,7 @@
 #include "airdatamodel.h"
 #include "soildatamodel.h"
 #include "lightdatamodel.h"
+#include "settings.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
     AirDataModel airModel(serverConnector);
     SoilDataModel soilModel(serverConnector);
     LightDataModel lightModel(serverConnector);
+    Settings settings;
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
@@ -28,6 +30,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty(QStringLiteral("airModel"), &airModel);
     ctxt->setContextProperty(QStringLiteral("soilModel"), &soilModel);
     ctxt->setContextProperty(QStringLiteral("lightModel"), &lightModel);
+    ctxt->setContextProperty(QStringLiteral("appsettings"), &settings);
 
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));

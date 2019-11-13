@@ -11,8 +11,8 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        anchors.rightMargin: 35
-        anchors.leftMargin: 35
+        anchors.rightMargin: 25
+        anchors.leftMargin: 25
         anchors.topMargin: 10
         anchors.bottomMargin: 10
 
@@ -25,7 +25,7 @@ Item {
         }
 
         RowLayout {
-            anchors.fill: parent
+            anchors.centerIn: parent
             anchors.topMargin: 10
             ScrollView {
                 id: scroller
@@ -81,33 +81,12 @@ Item {
                                 }
                             }
 
-                        }
-                    }
-
-                    ListView {
-                        Layout.alignment: Qt.AlignHCenter
-                        model: datesModel
-                        height: 250
-
-                        delegate:Item {
-                            width: parent.width
-                            height: 40
-                            Rectangle {
-                                anchors.fill: parent
-
-                            border.width: 1
-
-
-                            Text {
-                                anchors.fill: parent
-                                text: Qt.formatDate(dateValue,"ddd MMM d yyyy")
-                                color:"white"
-                                font.bold: true
-                                horizontalAlignment: Qt.AlignHCenter
+                            background: Rectangle {
+                               anchors.fill: parent
+                               color: "green"
                             }
-                        }
-                        }
 
+                        }
                     }
 
                     Button {
