@@ -263,5 +263,79 @@ void DbManager::updateSchedule(const QString &date, bool remove)
         query.prepare("INSERT INTO tp_database.watering_schedule(date) VALUES ('" + date + "');");
     }
     query.exec();
+}
+
+QMap<QString, QString> DbManager::getSettings()
+{
+    QSqlQuery query;
+    QMap<QString, QString> result{};
+    query.prepare("SELECT min_air_temperature, max_air_temperature,  max_air_humidity, min_air_humidity, max_soil_humidity, min_soil_humidity,"
+                  "max_light, min_light, watering_time, watering_hour, reciver_receiver FROM settings");
+    query.exec();
+    while(query.next()) {
+        result.insert("min_air_temperature", query.value(0).toString());
+        result.insert("max_air_temperature", query.value(1).toString());
+        result.insert("max_air_humidity", query.value(2).toString());
+        result.insert("min_air_humidity", query.value(3).toString());
+        result.insert("max_soil_humidity", query.value(4).toString());
+        result.insert("min_soil_humidity", query.value(5).toString());
+        result.insert("max_light", query.value(6).toString());
+        result.insert("min_light", query.value(7).toString());
+        result.insert("watering_time", query.value(8).toString());
+        result.insert("watering_hour", query.value(9).toString());
+        result.insert("reciver_receiver", query.value(10).toString());
+    }
+    return result;
+
+}
+
+void DbManager::saveSettingsValues(const QString &minTemp, const QString &maxTemp, const QString &minWA,
+                                   const QString &maxWA, const QString &minWS, const QString &maxWS,
+                                   const QString &minL, const QString &maxL, const QString &email, const QString &hour
+                                   , const QString& wateringtime)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE settings SET max_air_temperature="
+                  + maxTemp +",  min_air_temperature="
+                  + minTemp +",  min_air_humidity="
+                  + minWA +",  max_air_humidity="
+                  + maxWA +",  max_soil_humidity="
+                  + maxWS +",  min_soil_humidity="
+                  + minWS +",  max_light="
+                  + maxL +",  min_light="
+                  + minL +",  min_light="
+                  + minL +",  watering_time="
+                  + wateringtime +",  watering_hour="
+                  + hour +",  reciver_receiver='" + email + "' WHERE id=1;");
+    query.exec();
     qDebug() << "QUERY:" << query.lastQuery();
+
+}
+
+QString DbManager::containsDate(const QString &date)
+{
+    // przygotowanie query z podaną datą jako argument funkcji
+    QSqlQuery query;
+    query.prepare(QStringLiteral("SELECT * FROM watering_schedule WHERE date='%1' limit 1").arg(date));
+    query.exec();
+    // jeżeli data istnieje zostaje zwrócona w postaci łańcuch znaków
+    if (query.next()) {
+       return query.value(0).toString();
+    }
+    // jeżeli data nie została znaleziona zostaje zwróconby pusty łańcuch
+    return "";
+}
+
+double DbManager::getWateringTime()
+{
+    // przygotowanie query z zapytaniem o czas podlewania
+    QSqlQuery query;
+    query.prepare("SELECT watering_time, FROM settings");
+    query.exec();
+    // zwróć czas podlewania w postaci sec
+    if (query.next()) {
+        return query.value(0).toDouble();
+    }
+    // jeżeli nie ma wyników zwróć -1 jako niepoprawną wartość
+    return -1;
 }

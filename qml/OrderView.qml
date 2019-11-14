@@ -40,24 +40,26 @@ Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
+                    // graficzna reprezentacja kalendarza
                     Calendar {
+                        // ustawianie szeregu propert wysokość, szerokość, wyrównanie...
                         id: calendar
                         Layout.alignment: Qt.AlignCenter
                         height: 300
                         width: 300
-
                         minimumDate: new Date(2019, 0, 1)
                         maximumDate: new Date(2021, 0, 1)
-
-
+                        // ustawienie stylu kalndarza
                         style: CalendarStyle {
+                            // konfiguracja delegaty dla pojedynczego dnia
                             dayDelegate: Item {
                                 Rectangle {
                                     id: rect
                                     anchors.fill: parent
+                                    // ustawienie koloru pojedycznego dnia jeżeli jest w modelu - niebieski, nie jest - biały
                                     color: datesModel.containsDate(Qt.formatDate(styleData.date,"ddd MMM d yyyy")) ? "blue" : "white"
-
                                     Label {
+                                        // stylizacja tekstu kolor, rozmiar fontu...
                                         id: dayDelegateText
                                         text: styleData.date.getDate()
                                         anchors.centerIn: parent
@@ -66,26 +68,19 @@ Item {
                                         color: "black"
                                         font.bold: styleData.selected
                                     }
-
+                                    // wypełnienie delegata obszarem kliknięcia
                                     MouseArea {
                                         anchors.fill: parent
-
-
                                         onClicked: {
+                                            // aktualizacja widoku i modelu
                                             var date_str = Qt.formatDate(styleData.date,"ddd MMM d yyyy")
                                             datesModel.updateDate(date_str)
+                                            // przeładowanie widoku
                                             reloadView()
-
                                         }
                                     }
                                 }
                             }
-
-                            background: Rectangle {
-                               anchors.fill: parent
-                               color: "green"
-                            }
-
                         }
                     }
 

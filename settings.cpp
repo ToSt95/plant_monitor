@@ -1,7 +1,23 @@
 #include "settings.h"
 
-Settings::Settings(QObject *parent) : QObject(parent)
+Settings::Settings(const Connector& connector, QObject *parent) : QObject(parent)
 {
+    connect(&connector, &Connector::settingsValueChanged, [this](const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+            const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
+            const QString& email, const QString& hour, const QString& time) {
+        setMinTemp(minTemp);
+        setMaxTemp(maxTemp);
+        setMinWA(minWA);
+        setMaxWA(maxWA);
+        setMinWS(minWS);
+        setMaxWS(maxWS);
+        setMaxL(maxL);
+        setMinL(minL);
+        setEmail(email);
+        setHour(hour);
+        setWateringTime(time);
+
+    });
 
 }
 
@@ -113,4 +129,15 @@ void Settings::setHour(const QString &hour)
 {
     m_hour = hour;
     emit hourChanged();
+}
+
+QString Settings::getWateringTime() const
+{
+    return m_wateringTime;
+}
+
+void Settings::setWateringTime(const QString &wateringTime)
+{
+    m_wateringTime = wateringTime;
+    emit timeChanged();
 }

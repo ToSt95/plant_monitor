@@ -18,6 +18,15 @@ Server::Server()
        m_arduino.sendMessage("/AIR_READ");
     });
     m_timer->start(std::chrono::seconds(30));
+
+
+    // inicilizacja timer odpowiedzialnego za sprawdzanie dat
+    m_mainTimer = new QTimer(this);
+    // połączenie wywołania sygnału timeout z funkcją checkIfWateringPlaned
+    connect(m_mainTimer, &QTimer::timeout, this, &Server::checkIfWateringPlaned);
+    // wystartowanie timera, funkcja checkIfWateringPlaned będzie wywoływana co
+    // hourInSec sekund
+    //m_mainTimer->start(hourInSec);
 }
 
 bool Server::start()
@@ -67,7 +76,7 @@ void Server::onNewRequest(const QByteArray& data)
     Request::Command command = requestFromClient.command();
     QJsonObject responseJsonObject;
 
-    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 13) {
+    if(static_cast<int>(command) < 1 || static_cast<int>(command) > 15) {
         responseJsonObject.insert("command", -1);
     } else {
         responseJsonObject.insert("command", command);
@@ -233,6 +242,32 @@ void Server::onNewRequest(const QByteArray& data)
         responseJsonObject.insert("data", array);
         break;
     }
+    case Request::SettingsRead: {
+        QMap<QString, QString> dbResult = m_dbManager.getSettings();
+        responseJsonObject.insert("minTemp", dbResult.value("min_air_temperature"));
+        responseJsonObject.insert("maxTemp", dbResult.value("max_air_temperature"));
+        responseJsonObject.insert("minWA", dbResult.value("min_air_humidity"));
+        responseJsonObject.insert("maxWA", dbResult.value("max_air_humidity"));
+        responseJsonObject.insert("minWS", dbResult.value("min_soil_humidity"));
+        responseJsonObject.insert("maxWS", dbResult.value("max_soil_humidity"));
+        responseJsonObject.insert("minL", dbResult.value("min_light"));
+        responseJsonObject.insert("maxL", dbResult.value("max_light"));
+        responseJsonObject.insert("email", dbResult.value("reciver_receiver"));
+        responseJsonObject.insert("hour", dbResult.value("watering_hour"));
+        responseJsonObject.insert("time", dbResult.value("watering_time"));
+        qDebug() << "SETTINMG" << responseJsonObject;
+
+        break;
+    }
+    case Request::SettingsUpdate: {
+        auto d = requestFromClient.dataFromClient();
+        m_dbManager.saveSettingsValues(d.value("minTemp").toString(), d.value("maxTemp").toString(),
+                                       d.value("minWA").toString(), d.value("maxWA").toString(),
+                                       d.value("minWS").toString(), d.value("maxWS").toString(),
+                                       d.value("minL").toString(), d.value("maxL").toString(),
+                                       d.value("email").toString(), d.value("hour").toString(), d.value("time").toString());
+        return;
+    }
     }
     QJsonDocument doc(responseJsonObject);
     qDebug() << doc;
@@ -286,6 +321,28 @@ void Server::setEmailConfig()
     // setting up config values
     m_mailConfig.user = "team.project.arduino@gmail.com";
     m_mailConfig.password = "!@#123qweasdzxc";
+}
+
+void Server::checkIfWateringPlaned()
+{
+    // pobieranie aktualnej daty
+    const QDate currentDate = QDate::currentDate();
+    // pobieranie daty z bazy danych (jeżeli istnieje wynik to data w przeciwnym razie pusty łańcuch)
+    QString resultDate = m_dbManager.containsDate(currentDate.toString("ddd MMM d yyyy hh mm"));
+    // jeżeli data istnieje (planowanie podlewanie na ten dzień)
+    if (!resultDate.isEmpty()) {
+      // pobieranie czasu podlewania na podstawie daty z bazy danych
+      const QDateTime wateringDate = QDateTime::fromString(resultDate, "hh:mm");
+      // zamina czasu na msec
+      int dateTime = wateringDate.time().msec();
+      // pobieraniu czasu podelwania z bazy danych
+      double wateringTime = m_dbManager.getWateringTime();
+      // uruchamianie funkcji singleshot
+      QTimer::singleShot(dateTime, [this, wateringTime]() {
+          // wysyłanie wiadomości do arduino wraz z czasem podlewania
+          m_arduino.sendMessage("WATER_ON|" + QString::number(wateringTime).toUtf8());
+      });
+    }
 }
 
 Email::Message Server::createMessage()

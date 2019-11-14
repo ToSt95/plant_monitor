@@ -48,6 +48,7 @@ Item {
                              id: maxTempInput
                              placeholder: appsettings.maxTemp
 
+
                         }
 
                         Text {
@@ -152,6 +153,20 @@ Item {
                         }
 
                         Text {
+                            id: timeWater
+
+                            text: qsTr("CZAS PODLEWANIA")
+                        }
+
+                        Input {
+                            id: timeWaterInput
+                            placeholder: appsettings.wateringTime
+
+                             width: 70
+
+                        }
+
+                        Text {
                             id: notificationMail
                             text: qsTr("EMAIL")
                         }
@@ -175,16 +190,25 @@ Item {
                             id: saveButton
 
                             onClicked: {
-                                appsettings.minTemp = minMepInput.text;
-                                appsettings.maxTemp = maxTempInput.text;
-                                appsettings.maxWA = maxHumAirInput.text
-                                appsettings.minWA = minHumAirInput.text
-                                appsettings.minWS = minHumSoilInput.text
-                                appsettings.maxWS = maxHumSoilInput.text
-                                appsettings.maxL = maxLighInput.text
-                                appsettings.minL = minMLightInput.text
-                                appsettings.email = notificationMailinput.text
-                                appsettings.hourWaterInput = hourWaterInput.text
+                                if (minMepInput.text !== "") appsettings.minTemp = minMepInput.text;
+                                if (maxTempInput.text !== "") appsettings.maxTemp = maxTempInput.text;
+                                if (maxHumAirInput.text !== "") appsettings.maxWA = maxHumAirInput.text
+                                if (minHumAirInput.text !== "") appsettings.minWA = minHumAirInput.text
+                                if (minHumSoilInput.text !== "") appsettings.minWS = minHumSoilInput.text
+                                if (maxHumSoilInput.text !== "") appsettings.maxWS = maxHumSoilInput.text
+                                if (maxLighInput.text !== "") appsettings.maxL = maxLighInput.text
+                                if (minMLightInput.text !== "") appsettings.minL = minMLightInput.text
+                                if (notificationMailinput.text !== "") appsettings.email = notificationMailinput.text
+                                if (hourWaterInput.text !== "") appsettings.hour = hourWaterInput.text
+                                if (timeWaterInput.text !== "") appsettings.wateringTime = timeWaterInput.text
+
+
+
+                                connector.saveSettingsValues(appsettings.minTemp, appsettings.maxTemp,
+                                                             appsettings.minWA, appsettings.maxWA,
+                                                             appsettings.minWS, appsettings.maxWS,
+                                                             appsettings.minL, appsettings.maxL,
+                                                             appsettings.email, appsettings.hour, appsettings.wateringTime)
 
 
                             }

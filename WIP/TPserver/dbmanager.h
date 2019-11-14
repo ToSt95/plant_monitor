@@ -29,6 +29,12 @@ public:
     QList<QStringList> initSoilData();
     QList<QStringList> initLightData();
     void updateSchedule(const QString& date, bool remove);
+    QMap<QString, QString> getSettings();
+    void saveSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+                    const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
+                    const QString& email, const QString& hour, const QString& wateringtime);
+    QString containsDate(const QString& date);
+    double getWateringTime();
 
 
 private:

@@ -18,14 +18,14 @@ Connector::Connector(QObject* parent)
     m_timer3 = new QTimer;
 
     connect(m_timer, &QTimer::timeout, [this](){
-       tempRequest();
+        tempRequest();
 
-       qDebug() << "REQUEST SEND";
+        qDebug() << "REQUEST SEND";
     });
 
     connect(m_timer2, &QTimer::timeout, [this](){
         soilRequest();
-       qDebug() << "REQUEST SEND";
+        qDebug() << "REQUEST SEND";
     });
     connect(m_timer3, &QTimer::timeout, [this](){
         lightRequest();
@@ -62,6 +62,8 @@ void Connector::onConnectionStatusChanged(QAbstractSocket::SocketState socketSta
 
             modelLoaded = true;
         }
+
+        initSettingsValues();
     }
     emit connectionStatusChanged();
 }
@@ -132,6 +134,25 @@ void Connector::onReadyRead()
             QString date = obj.toObject().value("date").toString();
             emit newScheduleData(date);
         }
+    } else if (command == 14) {
+        QString minTemp = object.value("minTemp").toString();
+        QString maxTemp = object.value("maxTemp").toString();
+        QString minWA = object.value("minWA").toString();
+        QString maxWA = object.value("maxWA").toString();
+        QString minWS = object.value("minWS").toString();
+        QString maxWS = object.value("maxWS").toString();
+        QString minL = object.value("minL").toString();
+        QString maxL = object.value("maxL").toString();
+        QString email = object.value("email").toString();
+        QString hour = object.value("hour").toString();
+        QString time = object.value("time").toString();
+
+        qDebug() << "@@@@@@"  << object;
+
+        emit settingsValueChanged(minTemp, maxTemp, minWA, maxWA,
+                                  minWS,maxWS, minL, maxL,
+                                  email,  hour, time);
+
     }
 }
 
@@ -244,23 +265,26 @@ void Connector::updateSchedule(const QString &date, bool remove) const
     m_socket->flush();
 }
 
-void Connector::initSettingsValues(const QString &minTemp, const QString &maxTemp,
-                                   const QString &minWA, const QString &maxWA,
-                                   const QString &minWS, const QString &maxWS,
-                                   const QString &minL, const QString &maxL,
-                                   const QString &email, const QString &hour)
+void Connector::initSettingsValues()
 {
+    qDebug() << "SETTINGS REQUEST";
+    QJsonObject object;
+    QJsonValue idRequest = 14;
+    object.insert("command", idRequest);
+    auto doc = QJsonDocument(object);
+    m_socket->write(doc.toBinaryData());
+    m_socket->flush();
 
 }
 
 void Connector::saveSettingsValues(const QString &minTemp, const QString &maxTemp,
-                           const QString &minWA, const QString &maxWA,
-                           const QString &minWS, const QString &maxWS,
-                           const QString &minL, const QString &maxL,
-                           const QString &email, const QString &hour)
+                                   const QString &minWA, const QString &maxWA,
+                                   const QString &minWS, const QString &maxWS,
+                                   const QString &minL, const QString &maxL,
+                                   const QString &email, const QString &hour, const QString& time)
 {
     QJsonObject object;
-    QJsonValue idRequest = 15;
+    QJsonValue idRequest = 13;
     object.insert("command", idRequest);
     object.insert("minTemp", minTemp);
     object.insert("maxTemp", maxTemp);
@@ -272,6 +296,7 @@ void Connector::saveSettingsValues(const QString &minTemp, const QString &maxTem
     object.insert("maxL", maxL);
     object.insert("email", email);
     object.insert("hour", hour);
+    object.insert("time", time);
     auto doc = QJsonDocument(object);
     m_socket->write(doc.toBinaryData());
     m_socket->flush();

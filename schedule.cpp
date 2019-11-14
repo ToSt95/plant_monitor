@@ -50,19 +50,24 @@ ScheduleModel::ScheduleModel(const Connector& connector, QObject* parent)
 
 void ScheduleModel::updateDate(const QString &date)
 {
+    // formatowanie daty
     QDate dateType = QDate::fromString(date, "ddd MMM d yyyy");
-    qDebug() << "NEW DATA IN DATE MODEL" << dateType;
-
+    // jeśli data istioeje w modelu - usuń
     if (m_dates.contains(dateType)) {
+        // wyznaczanie indeksu danych w modelu
         int idx = m_dates.indexOf(dateType);
         beginRemoveRows(QModelIndex(), idx, idx);
+        // usuwanie danych
         m_dates.removeAt(idx);
         endRemoveRows();
+        // wyślij request z updatem danych
         m_connector.updateSchedule(date, true);
     } else {
+        // jeśli data nie istioeje w modelu - dodaj
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_dates.append(dateType);
         endInsertRows();
+        // wyślij request z updatem danych
         m_connector.updateSchedule(date, false);
     }
 }

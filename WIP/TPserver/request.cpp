@@ -66,3 +66,8 @@ bool Request::removeData()
     bool remove = object.value("remove").toBool();
     return remove;
 }
+
+QJsonObject Request::dataFromClient()
+{
+    return m_jsonData.object();
+}

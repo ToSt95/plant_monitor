@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include <QObject>
+#include "connector.h"
 
 class Settings : public QObject
 {
@@ -16,9 +17,11 @@ class Settings : public QObject
     Q_PROPERTY(QString maxL READ getMaxL WRITE setMaxL NOTIFY maxLChanged)
     Q_PROPERTY(QString email READ getEmail WRITE setEmail NOTIFY emailChanged)
     Q_PROPERTY(QString hour READ getHour WRITE setHour NOTIFY hourChanged)
+    Q_PROPERTY(QString wateringTime READ getWateringTime WRITE setWateringTime NOTIFY timeChanged)
+
 
 public:
-    explicit Settings(QObject *parent = nullptr);
+    explicit Settings(const Connector& connector, QObject *parent = nullptr);
 
     QString getMinTemp() const;
     void setMinTemp(const QString &minTemp);
@@ -50,6 +53,9 @@ public:
     QString getHour() const;
     void setHour(const QString &hour);
 
+    QString getWateringTime() const;
+    void setWateringTime(const QString &wateringTime);
+
 signals:
     void minTempChanged();
     void maxTempChanged();
@@ -63,6 +69,7 @@ signals:
     void maxLChanged();
     void emailChanged();
     void hourChanged();
+    void timeChanged();
 
 
 private:
@@ -76,6 +83,7 @@ private:
     QString m_maxL;
     QString m_email;
     QString m_hour;
+    QString m_wateringTime;
 };
 
 #endif // SETTINGS_H

@@ -33,6 +33,7 @@ protected:
 
 private:
     void setEmailConfig();
+    void checkIfWateringPlaned();
     Email::Message createMessage();
 
     QMap<qintptr, Client*> m_clients;
@@ -41,6 +42,10 @@ private:
     Email::Sender* mailSender;
     ArduinoConnector m_arduino;
     QTimer* m_timer;
+    QTimer* m_mainTimer;
+
+    // jedna godzina przeliczona na sekundy
+    const int hourInSec{3600};
 };
 
 #endif // SERVER_H

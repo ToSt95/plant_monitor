@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     AirDataModel airModel(serverConnector);
     SoilDataModel soilModel(serverConnector);
     LightDataModel lightModel(serverConnector);
-    Settings settings;
+    Settings settings(serverConnector);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);

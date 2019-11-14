@@ -70,6 +70,7 @@ Item {
                 }
             }
             onClicked: {
+                connector.initSettingsValues()
                 connector.loginRequest(email.text, password.text)
             }
         }

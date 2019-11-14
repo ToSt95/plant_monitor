@@ -36,12 +36,10 @@ public:
     void initLightData();
     void initScheduleData();
     void updateSchedule(const QString& date, bool remove = false) const;
-    void saveSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+    Q_INVOKABLE void saveSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
                     const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
-                    const QString& email, const QString& hour);
-    void initSettingsValues(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
-                            const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
-                            const QString& email, const QString& hour);
+                    const QString& email, const QString& hour, const QString& time);
+    Q_INVOKABLE void initSettingsValues();
 
 signals:
     void connectionStatusChanged();
@@ -57,6 +55,9 @@ signals:
     void newSoilData(QString hum, QString date, QString time);
     void newLightData(QString hum, QString date, QString time);
     void newScheduleData(QString date);
+    void settingsValueChanged(const QString& minTemp, const QString& maxTemp, const QString& minWA, const QString& maxWA,
+                              const QString& minWS,const QString& maxWS, const QString& minL, const QString& maxL,
+                              const QString& email, const QString& hour, const QString& time);
 
 private:
     QTcpSocket *m_socket;
