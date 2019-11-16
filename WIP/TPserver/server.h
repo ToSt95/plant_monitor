@@ -46,6 +46,7 @@ private:
 
     // jedna godzina przeliczona na sekundy
     const int hourInSec{3600};
+    QString m_wateringTime; // should not be here
 };
 
 #endif // SERVER_H

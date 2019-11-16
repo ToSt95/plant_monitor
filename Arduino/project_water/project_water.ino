@@ -27,8 +27,8 @@ void setup(void)
 void loop() {
 
     wifi();
-    writeHumidityAndTemperature();
-    delay(800);
+    //writeHumidityAndTemperature();
+    //delay(800);
 }
 
 void writeHumidityAndTemperature() {
@@ -61,7 +61,6 @@ void wifiConnection() {
   // Start the server
   server.begin();
   Serial.println("Server started");
-  Serial.print(WiFi.localIP());
 }
 
 void wifi() {
@@ -87,15 +86,22 @@ void wifi() {
 void handleReuests(String request, WiFiClient client) {
   if (request.indexOf("/LED=ON") != -1)  
   {
+    request.remove(0,7);
     digitalWrite(ledPin, HIGH);
-    delay(5000);
+    Serial.println(request);
+    Serial.println(request.toInt());
+    Serial.println(request.toInt()*1000);
+    delay(request.toInt()*1000);
     digitalWrite(ledPin, LOW);
-    client.println("1,LED_ON");
+    client.println("2,LED_OFF");
+    client.flush();
+    
   } 
   else if (request.indexOf("/LED=OFF") != -1) 
   {
     digitalWrite(ledPin, LOW);
     client.println("2,LED_OFF");
+    client.flush();
   } 
   else if (request.indexOf("/AIR_READ") != -1) 
   {
@@ -103,5 +109,6 @@ void handleReuests(String request, WiFiClient client) {
      String hum = String(dht.readHumidity());
      String temp_hum_result = "3," + temp + "," + hum;
      client.println(temp_hum_result);
+     client.flush();
   } 
 }

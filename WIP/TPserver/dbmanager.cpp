@@ -330,7 +330,7 @@ double DbManager::getWateringTime()
 {
     // przygotowanie query z zapytaniem o czas podlewania
     QSqlQuery query;
-    query.prepare("SELECT watering_time, FROM settings");
+    query.prepare("SELECT watering_time FROM settings");
     query.exec();
     // zwróć czas podlewania w postaci sec
     if (query.next()) {

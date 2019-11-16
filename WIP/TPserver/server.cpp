@@ -115,11 +115,10 @@ void Server::onNewRequest(const QByteArray& data)
 
 
     case Request::Led: {
-        if(requestFromClient.leadState()) {
-           m_arduino.sendMessage("/LED=ON");
-        } else {
-           m_arduino.sendMessage("/LED=OFF");
-        }
+            qDebug() << "WATERING TIME:" << m_dbManager.getWateringTime();
+            QByteArray request = "/LED=ON|TIME" + QByteArray::number(m_dbManager.getWateringTime());
+            m_arduino.sendMessage(request);
+
         return;
     }
 

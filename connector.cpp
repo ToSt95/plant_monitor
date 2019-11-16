@@ -176,7 +176,6 @@ void Connector::ledRequest(bool ledState)
     QJsonObject object;
     QJsonValue idRequest = 6;
     object.insert("command", idRequest);
-    object.insert("state", ledState);
     auto doc = QJsonDocument(object);
     m_socket->write(doc.toBinaryData());
     m_socket->flush();
