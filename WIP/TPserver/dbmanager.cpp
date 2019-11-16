@@ -122,7 +122,7 @@ QVector<QStringList> DbManager::getUserData(const QString& email, const QString&
     return result;
 }
 
-void DbManager::saveHumAirTemperature(QString temperature, QString humidity)
+void DbManager::saveHumAirTemperature(QString temperature, QString humidity, QString soil)
 {
     QSqlQuery query;
     // format 2019-02-03 12:00:00
@@ -130,6 +130,10 @@ void DbManager::saveHumAirTemperature(QString temperature, QString humidity)
     query.prepare("INSERT INTO tp_database.air_measurement(humidity, temperature, date) VALUES ("
                   + temperature + "," + humidity + ",'" + stringTime + "');");
     query.exec();
+    QSqlQuery query2;
+    query2.prepare("INSERT INTO tp_database.soil_measurement(moisture, date) VALUES ("
+                  + soil + ",'" + stringTime + "');");
+    query2.exec();
 }
 
 QVector<QStringList> DbManager::getAirMesurment()

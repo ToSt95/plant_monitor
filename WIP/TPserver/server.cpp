@@ -35,14 +35,14 @@ bool Server::start()
         qCritical("Server could not start");
         return false;
     }
-    qInfo("Server started!");
+    qInfo("Niepoprawna wartość, sprawdź odczyty!");
     setEmailConfig();
     // creating sender object
     mailSender = new Email::Sender(&m_mailConfig,this);
     connect(mailSender, &Email::Sender::finished, [this](int value){
         qDebug() << "EMAIL RESPONSE CODE:" << mailSender->exitCodeDescription(value);
     });
-    const auto& message = createMessage();
+    const auto& message = createMessage("sss");
     mailSender->send(message);
     return true;
 }
@@ -289,9 +289,31 @@ void Server::onArduinoDataReady(QString temp)
         responseJsonObject.insert("command", 3);
         QString temp = result.at(1);
         QString hum = result.at(2);
-        m_dbManager.saveHumAirTemperature(temp, hum);
+        QString soil = result.at(3);
+        m_dbManager.saveHumAirTemperature(temp, hum, soil);
         //responseJsonObject.insert("temperature", temp);
         //responseJsonObject.insert("humidity", hum);
+
+        auto settings = m_dbManager.getSettings();
+
+        int maxTemp = settings.value("max_air_temperature").toInt();
+        int minTemp= settings.value("min_air_temperature").toInt();
+        int maxHum= settings.value("max_air_humidity").toInt();
+        int minHum= settings.value("min_air_humidity").toInt();
+        int maxSoil= settings.value("max_soil_humidity").toInt();
+        int minSoil= settings.value("min_soil_humidity").toInt();
+
+
+        if (temp.toInt() > maxTemp || temp.toInt() < minTemp ||
+            hum.toInt() >  maxHum ||    hum.toInt() < minHum ||
+                soil.toInt() > maxSoil || soil.toInt() < minSoil) {
+
+            QString m(QString("Odczyty: %1, %2, %3").arg(temp).arg(hum).arg(soil));
+            qDebug() << m;
+            qDebug() << m;
+            const auto& message = createMessage(m.toUtf8());
+            mailSender->send(message);
+        }
     }
 
     QJsonDocument doc(responseJsonObject);
@@ -344,13 +366,13 @@ void Server::checkIfWateringPlaned()
     }
 }
 
-Email::Message Server::createMessage()
+Email::Message Server::createMessage(QByteArray messageText)
 {
     // creating message and sending
     Email::Message message;
     message.recipient = "team.project.arduino@gmail.com";
-    message.subject = "Server has been started";
-    message.body = "Server is now running";
+    message.subject = "Niepoprawna wartość, sprawdź odczyty";
+    message.body = messageText;
     return message;
 }
 

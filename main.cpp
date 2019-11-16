@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     serverConnector.connectToServer();
-    serverConnector.m_timer->start(std::chrono::seconds(30));
-    serverConnector.m_timer2->start(std::chrono::seconds(17));
-    serverConnector.m_timer3->start(std::chrono::seconds(7));
+    serverConnector.m_timer->start(std::chrono::seconds(60));
+    serverConnector.m_timer2->start(std::chrono::seconds(40));
+    serverConnector.m_timer3->start(std::chrono::seconds(120));
 
     return app.exec();
 }

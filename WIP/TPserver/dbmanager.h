@@ -20,7 +20,8 @@ public:
     QVector<QStringList> getLightIntensity();
     QVector<QStringList> getSoilMoisture();
     QVector<QStringList> getUserData(const QString& email, const QString& password);
-    void saveHumAirTemperature(QString temperature, QString humidity);
+    void saveHumAirTemperature(QString temperature, QString humidity, QString soil);
+
     QVector<QStringList> getAirMesurment();
     QVector<QStringList> getSoilMesurment();
     QVector<QStringList> getLightMesurment();

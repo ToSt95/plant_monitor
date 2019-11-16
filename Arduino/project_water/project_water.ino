@@ -8,11 +8,18 @@
 // sensors
 #define DHTTYPE DHT11   // DHT 11
 DHT dht(dht_dpin, DHTTYPE); 
+#define SensorPin A0 
+float sensorValue = 0; 
+
 // wifi
 const char* ssid = "UPC9704183";
 const char* password = "rHzpmzp5kuwy";
 WiFiServer server(80);
+int moisture;
+int percentage;
 
+int map_low = 1024;
+int map_high = 460;
 void setup(void)
 { 
   dht.begin();
@@ -29,6 +36,7 @@ void loop() {
     wifi();
     //writeHumidityAndTemperature();
     //delay(800);
+
 }
 
 void writeHumidityAndTemperature() {
@@ -107,7 +115,11 @@ void handleReuests(String request, WiFiClient client) {
   {
      String temp = String(dht.readTemperature());
      String hum = String(dht.readHumidity());
-     String temp_hum_result = "3," + temp + "," + hum;
+     moisture = analogRead(SensorPin);
+
+     percentage = map(moisture, map_low, map_high, 0, 100);
+    
+     String temp_hum_result = "3," + temp + "," + hum + "," + sensorValue;
      client.println(temp_hum_result);
      client.flush();
   } 

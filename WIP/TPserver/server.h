@@ -34,7 +34,7 @@ protected:
 private:
     void setEmailConfig();
     void checkIfWateringPlaned();
-    Email::Message createMessage();
+    Email::Message createMessage(QByteArray message);
 
     QMap<qintptr, Client*> m_clients;
     DbManager m_dbManager;
