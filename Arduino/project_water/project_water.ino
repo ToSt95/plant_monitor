@@ -119,7 +119,7 @@ void handleReuests(String request, WiFiClient client) {
 
      percentage = map(moisture, map_low, map_high, 0, 100);
     
-     String temp_hum_result = "3," + temp + "," + hum + "," + sensorValue;
+     String temp_hum_result = "3," + temp + "," + hum + "," + percentage;
      client.println(temp_hum_result);
      client.flush();
   } 
