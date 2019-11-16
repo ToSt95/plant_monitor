@@ -116,9 +116,11 @@ void handleReuests(String request, WiFiClient client) {
      String temp = String(dht.readTemperature());
      String hum = String(dht.readHumidity());
      moisture = analogRead(SensorPin);
+     delay(1);
+     Serial.print(moisture);
 
      percentage = map(moisture, map_low, map_high, 0, 100);
-    
+         Serial.print(percentage);
      String temp_hum_result = "3," + temp + "," + hum + "," + percentage;
      client.println(temp_hum_result);
      client.flush();

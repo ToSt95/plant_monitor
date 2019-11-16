@@ -133,6 +133,7 @@ void DbManager::saveHumAirTemperature(QString temperature, QString humidity, QSt
     QSqlQuery query2;
     query2.prepare("INSERT INTO tp_database.soil_measurement(moisture, date) VALUES ("
                   + soil + ",'" + stringTime + "');");
+    qDebug() << "sooil@@@@@@@@@@@" << soil;
     query2.exec();
 }
 

@@ -116,7 +116,7 @@ void Server::onNewRequest(const QByteArray& data)
 
     case Request::Led: {
             qDebug() << "WATERING TIME:" << m_dbManager.getWateringTime();
-            QByteArray request = "/LED=ON|TIME" + QByteArray::number(m_dbManager.getWateringTime());
+            QByteArray request = "/LED=ON" + QByteArray::number(m_dbManager.getWateringTime());
             m_arduino.sendMessage(request);
 
         return;
@@ -279,7 +279,7 @@ void Server::onArduinoDataReady(QString temp)
     QString command = result.first();
     QJsonObject responseJsonObject;
 
-    qDebug() << "FROM ARDUINO" << temp;
+    qDebug() << "FROM ARDUINO" << result;
 
     if (command == "1") {
         responseJsonObject.insert("command", 1);
